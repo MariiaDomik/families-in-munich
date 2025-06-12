@@ -1,0 +1,18 @@
+{
+    "ENG": {
+        "startPage": {
+            "firstStep": {
+                "title": "Where do you live?",
+                "label": "Enter your PLZ",
+                "iconNext": "/public/icons/iconNext.png"
+            },
+            "secondStep": {
+                "title": "Your Children",
+                "imgGirl": "/public/icons/iconGirl.png",
+                "imgBoy": "/public/icons/iconBoy.png",
+                "imgPlus": "/public/icons/iconPlus.png",
+                "iconNext": "/public/icons/iconNext.png"
+            }
+        }
+    }
+}
