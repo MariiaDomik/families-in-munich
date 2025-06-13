@@ -5,13 +5,13 @@ import MapView from "@/components/ui/users/MapView";
 import { useState } from "react";
 
 export default function StartPage() {
-    const [step, setStep] = useState<number>(0);
+    const [step, setStep] = useState<1 | 2 | 3>(1);
 
     return (
         <main>
-            {(step == 0) && <FirstStep onNextClick={() => setStep(1)}/>}
-            {(step == 1) && <SecondStep onNextClick={() => setStep(2)}/>}
-            {(step == 2) && <MapView/>}
+            {(step == 1) && <FirstStep onNextClick={() => setStep(2)}/>}
+            {(step == 2) && <SecondStep onNextClick={() => setStep(3)}/>}
+            {(step == 3) && <MapView/>}
         </main>
     )
 }

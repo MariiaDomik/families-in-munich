@@ -12,6 +12,8 @@ export default function Icon({imgUrl, className} : IconProps) {
             src={imgUrl}
             alt=""
             className={className}
+            width={40}
+            height={40}
             ></Image>
         </div>
     )

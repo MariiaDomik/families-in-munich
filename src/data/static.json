@@ -13,6 +13,21 @@
                 "imgPlus": "/public/icons/iconPlus.png",
                 "iconNext": "/public/icons/iconNext.png"
             }
+        },
+        "registration": {
+            "title": "Create Account",
+            "btn": "Sign up"
+        },
+        "login": {
+            "title": "Login",
+            "btn": "Sign ip"
+        },
+        "home": {
+            "h1": "Welcome to most freundly App for Families in Munich!",
+            "description": "This App help you to connect with andere Femilies in city Munich",
+            "btn_start": "Start",
+            "btn_login": "Sign in",
+            "btn_register": "Sign up now"
         }
     }
 }
