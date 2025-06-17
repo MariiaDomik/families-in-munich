@@ -1,0 +1,47 @@
+{
+    "startPage": {
+        "firstStep": {
+            "title": "Where do you live?",
+            "label": "Enter your PLZ",
+            "iconNext": "/public/icons/iconNext.png"
+        },
+        "secondStep": {
+            "title": "Your Children",
+            "imgGirl": "/public/icons/iconGirl.png",
+            "imgBoy": "/public/icons/iconBoy.png",
+            "imgPlus": "/public/icons/iconPlus.png",
+            "iconNext": "/public/icons/iconNext.png"
+        }
+    },
+    "registration": {
+        "title": "Create Account",
+        "btn": "Sign up"
+    },
+    "login": {
+        "title": "Login",
+        "btn": "Sign ip"
+    },
+    "home": {
+        "h1": "Welcome to most freundly App for Families in Munich!",
+        "description": "This App help you to connect with andere Femilies in city Munich",
+        "btn_start": "Start",
+        "btn_login": "Sign in",
+        "btn_register": "Sign up now"
+    },
+    "profile": {
+        "baseinfo": {
+            "title": "Basic Info",
+            "city": "City",
+            "languages": "Spoken languages"
+        },
+        "children": {
+            "title": "Children",
+            "child": "Child",
+            "name": "Name",
+            "age": "Age",
+            "bday": "Birthday"
+        },
+        "hobbies": {},
+        "availability": {}
+    }
+}

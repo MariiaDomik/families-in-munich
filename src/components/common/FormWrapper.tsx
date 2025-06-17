@@ -1,5 +1,5 @@
 interface FormWrapperProps {
-    title: string;
+    title?: string;
     children: React.ReactNode;
     hadleSubmit: (formData: FormData) => Promise<void>;
 }

@@ -1,17 +1,17 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { handleAuthMiddleware } from "./lib/middleware/auth";
+import { handleI18nMiddleware } from "./lib/middleware/intl";
 
 export function middleware(request: NextRequest) {
+    const i18nResponse = handleI18nMiddleware(request);
+    if (i18nResponse?.redirected || i18nResponse?.status !== 200) 
+        return i18nResponse;
+  
+    const authResponse = handleAuthMiddleware(request);
 
-    const userId = request.cookies.get("userid")?.value;
-    // const userId = true;
-    if (!userId)
-        return NextResponse.redirect(new URL("/login", request.url))
-    return NextResponse.next();
+    return authResponse || i18nResponse || NextResponse.next();
 }
 
 export const config = {
-    matcher: [ "/users", "/users/(.*)",
-         "/events", "/events/(.*)",
-          "/chats", "/chats/(.*)"
-        ]
-}
+    matcher: ['/((?!_next|favicon.ico|api).*)'],
+};

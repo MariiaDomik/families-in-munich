@@ -1,5 +1,5 @@
 import staticData from "@/services/staticData";
-import Input from "@/components/common/input/Input";
+import Input from "@/components/common/Input";
 import Icon from "@/components/common/Icon";
 import Button from "@/components/common/Button/Button";
 

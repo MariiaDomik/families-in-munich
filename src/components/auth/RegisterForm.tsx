@@ -1,7 +1,7 @@
 import { registerUser } from "@/actions/user";
 import FormWrapper from "../common/FormWrapper";
 import staticData from "@/services/staticData";
-import Input from "../common/input/Input";
+import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
 

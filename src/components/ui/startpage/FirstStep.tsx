@@ -1,6 +1,6 @@
 import Button from "@/components/common/Button/Button";
 import Icon from "@/components/common/Icon";
-import Input from "@/components/common/input/Input";
+import Input from "@/components/common/Input";
 import staticData from "@/services/staticData";
 
 interface FirstStepProps {

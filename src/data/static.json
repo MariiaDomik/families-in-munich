@@ -28,6 +28,22 @@
             "btn_start": "Start",
             "btn_login": "Sign in",
             "btn_register": "Sign up now"
+        },
+        "profile": {
+            "baseinfo": {
+                "title": "Basic Info",
+                "city": "City",
+                "languages": "Spoken languages"
+            },
+            "children": {
+                "title": "Children",
+                "child": "Child",
+                "name": "Name",
+                "age": "Age",
+                "bday": "Birthday" 
+            },
+            "hobbies": {},
+            "availability": {}
         }
     }
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Input from "../common/input/Input";
+import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
 import LoginForm from "./LoginForm";
