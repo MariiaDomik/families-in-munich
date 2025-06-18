@@ -4,6 +4,7 @@ import staticData from "@/services/staticData";
 import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
+import GoogleAuthButton from "./GoogleAuthButton";
 
 export default function LoginForm() {
     const language = "ENG";
@@ -45,6 +46,8 @@ export default function LoginForm() {
             >
                 {data.btn}
             </Button>
+
+            <GoogleAuthButton />
 
         </FormWrapper>
     )
