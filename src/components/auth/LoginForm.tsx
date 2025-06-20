@@ -12,10 +12,9 @@ export default function LoginForm() {
 
     const loginSubmit = async (formData: FormData) => {
         "use server"
-        const name = formData.get("name");
-        const email = formData.get("email");
-        const password = formData.get("password");
-        await loginUser();
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+        await loginUser({ email, password });
     }
 
     return (

@@ -11,10 +11,10 @@ export default function RegisterForm() {
 
     const registerSubmit = async (formData: FormData) => {
         "use server"
-        const name = formData.get("name");
-        const email = formData.get("email");
-        const password = formData.get("password");
-        await registerUser();
+        const name = formData.get("name") as string;
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+        await registerUser({ email, password, name });
     }
 
     return (
