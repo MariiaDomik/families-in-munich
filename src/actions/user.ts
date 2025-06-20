@@ -4,12 +4,12 @@ import bcrypt from "bcrypt"
 import { randomBytes } from "crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { UserRegistration, UserLogin } from "@/types/User";
+import { UserRegistration, UserLogin, UserProfile } from "@/types/User";
 
 export async function registerUser(userData: UserRegistration) {
     const hashedPassword = bcrypt.hash(userData.password, 10);
     const created_at = new Date(Date.now()).toISOString();
-    const [user] = await sql`INSERT INTO users (email, password_hash, name, created_at) VALUES (${userData.email}, ${hashedPassword}, ${data.name}, ${created_at})`;
+    const [user] = await sql`INSERT INTO users (email, password_hash, name, created_at) VALUES (${userData.email}, ${hashedPassword}, ${userData.name}, ${created_at})`;
     redirect("/profile/completeRegistration");
 }
 
@@ -41,6 +41,24 @@ export async function  getCurrentUser() {
     return user;
 }
 
-export async function getFullUserProfile(userId: string) {
-    
+export async function getFullCurrentUserProfile(): Promise<UserProfile | null> {
+    const user  = await getCurrentUser();
+    if(!user) return null;
+
+    const [profile] = await sql`
+        SELECT 
+            u.id, u.name, u.email, u.avatar_url,
+            p.about_me, p.district, p.city, p.latitude, p.longitude,
+            p.plz, p.created_at, p.updated_at, p.is_visible,
+            COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
+            COALESCE(json_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '[]') AS hobbies
+        FROM users u
+        LEFT JOIN profiles p ON p.userId = u.id
+        LEFT JOIN children c ON c.userId = u.id
+        LEFT JOIN user_hobbies uh ON uh.userId = u.id
+        LEFT JOIN hobbies h ON h.userId = u.id
+        WHERE u.id = ${user.id}
+        GROUP BY u.id` as [UserProfile];
+
+    return profile;
 }

@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { getUserByEmail } from '../db/user';
+import { getUserByEmail } from '@/actions/user';
 import { redirect } from 'next/navigation';
 
 export async function authorizeUser(email: string, password: string) {
