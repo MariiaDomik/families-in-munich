@@ -1,28 +1,44 @@
-import { loginUser } from "@/actions/user";
+'use client';
 import FormWrapper from "../common/FormWrapper";
 import staticData from "@/services/staticData";
 import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
 import GoogleAuthButton from "./GoogleAuthButton";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import router from "next/router";
 
 export default function LoginForm() {
     const language = "ENG";
     const data = staticData[language].login;
+    const [error, setError] = useState<string | null>(null);
 
-    const loginSubmit = async (formData: FormData) => {
-        "use server"
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
-        await loginUser({ email, password });
-    }
+        const result = await signIn("credentials", {
+            email,
+            password,
+            redirect: true,
+        });
+        if (result?.error) {
+            setError(error);
+        } else {
+            setError("Login successful");
+            router.push("/");
+        }
+    };
 
     return (
-        <FormWrapper title={data.title} hadleSubmit={loginSubmit}>
+        <div>
+        <FormWrapper title={data.title} className="space-y-6" onSubmit={handleSubmit}>
             <Input
                 type="text"
-                label="Name"
-                name="name"
+                label="Email"
+                name="email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="your name here..."
                 containerStyle="mb-4 text-left"
@@ -46,8 +62,9 @@ export default function LoginForm() {
                 {data.btn}
             </Button>
 
-            <GoogleAuthButton />
 
         </FormWrapper>
+            <GoogleAuthButton />
+            </div>
     )
 }

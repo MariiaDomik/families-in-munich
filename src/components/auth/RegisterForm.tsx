@@ -18,7 +18,7 @@ export default function RegisterForm() {
     }
 
     return (
-        <FormWrapper title={data.title} hadleSubmit={registerSubmit}>
+        <FormWrapper title={data.title} action={registerSubmit}>
             <Input
                 type="text"
                 label="Name"

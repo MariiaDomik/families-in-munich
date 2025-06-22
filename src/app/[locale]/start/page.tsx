@@ -2,7 +2,7 @@
 import MotionContainer from "@/components/common/MotionContainer";
 import FirstStep from "@/components/startpage/FirstStep";
 import SecondStep from "@/components/startpage/SecondStep";
-import MapView from "@/components/ui/users/MapView";
+import MapView from "@/components/map/MapView";
 import { useState } from "react";
 
 export default function StartPage() {

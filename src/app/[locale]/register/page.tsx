@@ -1,8 +1,5 @@
-import AuthForm, { AuthFormType} from "@/components/auth/AuthForm";
-import Link from "next/link";
+import AuthForm, { AuthFormType } from "@/components/auth/AuthForm";
 
 export default function RegisterPage() {
-    return (
-        <AuthForm authFormType={AuthFormType.Register}/>
-    )
+    return <AuthForm authFormType={AuthFormType.Register} />;
 }
