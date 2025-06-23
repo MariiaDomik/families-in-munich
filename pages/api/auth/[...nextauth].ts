@@ -4,7 +4,10 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { authorizeUser } from "@/lib/auth/byCredentials";
 import { getUserByEmail, registerGoogleUser } from "@/actions/user";
 
+console.log("GOOGLE ID:", process.env.GOOGLE_CLIENT_ID);
+
 export default NextAuth({
+  
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -45,10 +48,16 @@ export default NextAuth({
       return session;
     },
     async signIn({ user, account }) {
+      console.log("SIGNIN", { user, account });
       if (account?.provider === "google") {
-        const googleUser = await getUserByEmail(user.email);
-        if (!googleUser) {
-          await registerGoogleUser({ email: user.email, name: user.name as string });
+        try {
+          const googleUser = await getUserByEmail(user.email);
+          if (!googleUser) {
+            await registerGoogleUser({ email: user.email, name: user.name as string });
+          }
+        } catch (e) {
+          console.error('Google SignIn error', e);
+          return false; // прервать логин
         }
       }
       if (account?.provider === "credentials") {

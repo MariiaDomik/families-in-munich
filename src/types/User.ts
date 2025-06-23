@@ -12,6 +12,8 @@ export interface User {
     gender: Gender;
     adress?: string;
     children: Child[];
+    about_me: string;
+    avatar_url: string;
 }
 
 export type UserProfile = User;

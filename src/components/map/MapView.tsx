@@ -28,8 +28,7 @@ export default function Map({
   users,
   currentUserLocation,
   filterAge,
-  filterDistrict,
-  filterHobby
+  filterDistrict
 }: Props) {
   const currentYear = new Date().getFullYear();
 
@@ -42,11 +41,8 @@ export default function Map({
       ? user.district?.name?.toLowerCase() === filterDistrict.toLowerCase()
       : true;
 
-    const matchesHobby = filterHobby
-      ? user.children?.some(child => child.hobbies?.some(hobby => hobby.toLowerCase().includes(filterHobby.toLowerCase())))
-      : true;
 
-    return matchesAge && matchesDistrict && matchesHobby;
+    return matchesAge && matchesDistrict ;
   });
 
   // Исправляем проблему с иконками Leaflet

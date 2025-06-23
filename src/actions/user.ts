@@ -3,6 +3,7 @@ import sql from "@/lib/db/postgre";
 import bcrypt from "bcrypt"
 import { redirect } from "next/navigation";
 import { UserRegistration, UserLogin, UserProfile, GoogleUserRegistration } from "@/types/User";
+import { ProfileData } from "@/types/ProfileData";
 
 export async function registerUser(userData: UserRegistration) {
     const hashedPassword = bcrypt.hash(userData.password, 10);
@@ -28,18 +29,257 @@ export async function getFullUserProfile(userId: string): Promise<UserProfile | 
             COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
             COALESCE(json_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '[]') AS hobbies
         FROM users u
-        LEFT JOIN profiles p ON p.userId = u.id
-        LEFT JOIN children c ON c.userId = u.id
-        LEFT JOIN user_hobbies uh ON uh.userId = u.id
-        LEFT JOIN hobbies h ON h.userId = u.id
+        LEFT JOIN profiles p ON p.user_id = u.id
+        LEFT JOIN children c ON c.user_id = u.id
+        LEFT JOIN user_hobbies uh ON uh.user_id = u.id
+        LEFT JOIN hobbies h ON uh.hobby_id = h.id
         WHERE u.id = ${userId}
-        GROUP BY u.id` as [UserProfile];
+        GROUP BY u.id, p.about_me, p.district, p.city, p.latitude, p.longitude,
+            p.plz, p.created_at, p.updated_at, p.is_visible` as [UserProfile];
     return profile || null;
 }
 
 export async function getUserByEmail(email: string) {
     const [user] = await sql`SELECT * FROM users WHERE email = ${email}`;
     return user || null;
+}
+
+// Новые методы для сохранения данных профиля
+export async function saveProfileData(userId: string, profileData: ProfileData) {
+    try {
+        // Начинаем транзакцию
+        await sql`BEGIN`;
+
+        // 1. Сохраняем основную информацию профиля
+        await saveBasicProfileInfo(userId, profileData);
+
+        // 2. Сохраняем детей
+        await saveChildren(userId, profileData.children);
+
+        // 3. Сохраняем языки
+        await saveLanguages(userId, profileData.languages);
+
+        // 4. Сохраняем хобби
+        await saveHobbies(userId, profileData.hobbies);
+
+        // 5. Сохраняем любимые места
+        await saveFavoritePlaces(userId, profileData.favoritePlaces);
+
+        // 6. Сохраняем доступность
+        await saveAvailability(userId, profileData.availability);
+
+        // Завершаем транзакцию
+        await sql`COMMIT`;
+
+        return { success: true, message: 'Profile saved successfully' };
+    } catch (error) {
+        // Откатываем транзакцию в случае ошибки
+        await sql`ROLLBACK`;
+        console.error('Error saving profile:', error);
+        return { success: false, message: 'Failed to save profile' };
+    }
+}
+
+async function saveBasicProfileInfo(userId: string, profileData: ProfileData) {
+    const updated_at = new Date().toISOString();
+    
+    // Проверяем, существует ли уже профиль
+    const [existingProfile] = await sql`
+        SELECT id FROM profiles WHERE userId = ${userId}
+    `;
+
+    if (existingProfile) {
+        // Обновляем существующий профиль
+        await sql`
+            UPDATE profiles 
+            SET city = ${profileData.city}, updated_at = ${updated_at}
+            WHERE userId = ${userId}
+        `;
+    } else {
+        // Создаем новый профиль
+        await sql`
+            INSERT INTO profiles (userId, city, created_at, updated_at)
+            VALUES (${userId}, ${profileData.city}, ${updated_at}, ${updated_at})
+        `;
+    }
+}
+
+async function saveChildren(userId: string, children: any[]) {
+    // Удаляем существующих детей
+    await sql`DELETE FROM children WHERE userId = ${userId}`;
+
+    // Добавляем новых детей
+    for (const child of children) {
+        if (child.name && child.age) {
+            await sql`
+                INSERT INTO children (userId, name, age, gender, birthday)
+                VALUES (
+                    ${userId}, 
+                    ${child.name}, 
+                    ${child.age}, 
+                    ${child.gender || 'unknown'}, 
+                    ${child.birthday ? new Date(child.birthday).toISOString() : null}
+                )
+            `;
+        }
+    }
+}
+
+async function saveLanguages(userId: string, languages: string[]) {
+    // Удаляем существующие языки
+    await sql`DELETE FROM user_languages WHERE userId = ${userId}`;
+
+    // Добавляем новые языки
+    for (const language of languages) {
+        if (language.trim()) {
+            // Сначала проверяем/создаем язык в таблице languages
+            let [langRecord] = await sql`
+                SELECT id FROM languages WHERE name = ${language.trim()}
+            `;
+
+            if (!langRecord) {
+                [langRecord] = await sql`
+                    INSERT INTO languages (name) VALUES (${language.trim()}) RETURNING id
+                `;
+            }
+
+            // Связываем пользователя с языком
+            await sql`
+                INSERT INTO user_languages (userId, languageId)
+                VALUES (${userId}, ${langRecord.id})
+            `;
+        }
+    }
+}
+
+async function saveHobbies(userId: string, hobbies: string[]) {
+    // Удаляем существующие хобби
+    await sql`DELETE FROM user_hobbies WHERE userId = ${userId}`;
+
+    // Добавляем новые хобби
+    for (const hobby of hobbies) {
+        if (hobby.trim()) {
+            // Сначала проверяем/создаем хобби в таблице hobbies
+            let [hobbyRecord] = await sql`
+                SELECT id FROM hobbies WHERE name = ${hobby.trim()}
+            `;
+
+            if (!hobbyRecord) {
+                [hobbyRecord] = await sql`
+                    INSERT INTO hobbies (name) VALUES (${hobby.trim()}) RETURNING id
+                `;
+            }
+
+            // Связываем пользователя с хобби
+            await sql`
+                INSERT INTO user_hobbies (userId, hobbyId)
+                VALUES (${userId}, ${hobbyRecord.id})
+            `;
+        }
+    }
+}
+
+async function saveFavoritePlaces(userId: string, places: string[]) {
+    // Удаляем существующие места
+    await sql`DELETE FROM user_favorite_places WHERE userId = ${userId}`;
+
+    // Добавляем новые места
+    for (const place of places) {
+        if (place.trim()) {
+            // Сначала проверяем/создаем место в таблице places
+            let [placeRecord] = await sql`
+                SELECT id FROM places WHERE name = ${place.trim()}
+            `;
+
+            if (!placeRecord) {
+                [placeRecord] = await sql`
+                    INSERT INTO places (name) VALUES (${place.trim()}) RETURNING id
+                `;
+            }
+
+            // Связываем пользователя с местом
+            await sql`
+                INSERT INTO user_favorite_places (userId, placeId)
+                VALUES (${userId}, ${placeRecord.id})
+            `;
+        }
+    }
+}
+
+async function saveAvailability(userId: string, availability: string) {
+    const updated_at = new Date().toISOString();
+    
+    // Обновляем доступность в профиле
+    await sql`
+        UPDATE profiles 
+        SET availability = ${availability}, updated_at = ${updated_at}
+        WHERE userId = ${userId}
+    `;
+}
+
+// Метод для получения данных профиля для useReducer
+export async function getProfileDataForReducer(userId: string): Promise<ProfileData> {
+    try {
+        // Получаем основную информацию профиля
+        const [profile] = await sql`
+            SELECT city, availability FROM profiles WHERE userId = ${userId}
+        `;
+
+        // Получаем детей
+        const children = await sql`
+            SELECT name, age, gender, birthday FROM children WHERE userId = ${userId}
+        `;
+
+        // Получаем языки
+        const languages = await sql`
+            SELECT l.name 
+            FROM user_languages ul 
+            JOIN languages l ON ul.languageId = l.id 
+            WHERE ul.userId = ${userId}
+        `;
+
+        // Получаем хобби
+        const hobbies = await sql`
+            SELECT h.name 
+            FROM user_hobbies uh 
+            JOIN hobbies h ON uh.hobbyId = h.id 
+            WHERE uh.userId = ${userId}
+        `;
+
+        // Получаем любимые места
+        const favoritePlaces = await sql`
+            SELECT p.name 
+            FROM user_favorite_places ufp 
+            JOIN places p ON ufp.placeId = p.id 
+            WHERE ufp.userId = ${userId}
+        `;
+
+        return {
+            city: profile?.city || '',
+            children: children.map(child => ({
+                id: child.id,
+                name: child.name || '',
+                age: child.age || 0,
+                gender: child.gender || 'unknown',
+                birthday: child.birthday ? new Date(child.birthday) : undefined,
+                hobbies: []
+            })),
+            languages: languages.map(lang => lang.name),
+            hobbies: hobbies.map(hobby => hobby.name),
+            favoritePlaces: favoritePlaces.map(place => place.name),
+            availability: profile?.availability || ''
+        };
+    } catch (error) {
+        console.error('Error loading profile data:', error);
+        return {
+            city: '',
+            children: [],
+            languages: [],
+            hobbies: [],
+            favoritePlaces: [],
+            availability: ''
+        };
+    }
 }
 
 export async function getUsersByChildAge(age: number) {

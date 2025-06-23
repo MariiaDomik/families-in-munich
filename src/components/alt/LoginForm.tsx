@@ -4,7 +4,7 @@ import staticData from "@/services/staticData";
 import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
-import GoogleAuthButton from "./GoogleAuthButton";
+import GoogleAuthButton from "../auth/GoogleAuthButton";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import router from "next/router";

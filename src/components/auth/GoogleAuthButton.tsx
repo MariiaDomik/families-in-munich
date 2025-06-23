@@ -1,10 +1,14 @@
 'use client'
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 export default function GoogleAuthButton() {
+    const handleForcedGoogleLogin = async () => {
+        await signOut({ redirect: false });
+        await signIn("google", { callbackUrl: "/dashboard" });
+    };
     return (
         <button
-            onClick={() => signIn('google')}
+            onClick={() => { signOut({ redirect: false }); signIn('google', { callbackUrl: "/en/profile/completeProfile" })}}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-all duration-200 text-gray-700 font-medium"
         >
             <svg className="w-5 h-5" viewBox="0 0 24 24">

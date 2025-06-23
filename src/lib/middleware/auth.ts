@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const protectedPaths = ["/users", "/users/(.*)",
          "/events", "/events/(.*)",
-          "/chats", "/chats/(.*)"];
+          "/chats", "/chats/(.*)", "/profile", "/profile/(.*)"];
 
 export function handleAuthMiddleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
