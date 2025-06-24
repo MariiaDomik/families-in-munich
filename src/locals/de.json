@@ -35,7 +35,38 @@
     "description": "Diese App hilft Ihnen, sich mit anderen Familien in München zu vernetzen",
     "btn_start": "Start",
     "btn_login": "Anmelden",
-    "btn_register": "Jetzt registrieren"
+    "btn_register": "Jetzt registrieren",
+    "hero": {
+      "title": "Hier sind Sie nicht allein",
+      "subtitle": "Finden Sie Freunde, Unterstützung und neue Bekanntschaften unter russischsprachigen Familien in München",
+      "cta_button": "Freunde finden beginnen"
+    },
+    "features": {
+      "loneliness": {
+        "title": "Einsamkeit in der Emigration",
+        "description": "Wenn Kinder ihre Freunde vermissen und Sie Unterstützung vermissen, werden die Tage länger."
+      },
+      "language": {
+        "title": "Kontakte in der Muttersprache",
+        "description": "Kommunikation auf Russisch ist nicht nur Komfort, sondern auch kulturelle Einheit."
+      },
+      "community": {
+        "title": "Familienkreis in der Nähe",
+        "description": "Treffen auf dem Spielplatz, gemeinsame Ausflüge, Austausch von Kindersachen — so entsteht Gemeinschaft."
+      }
+    },
+    "how_it_works": {
+      "title": "Wie funktioniert es?",
+      "steps": {
+        "location": "Geben Sie Ihren Bezirk an",
+        "children": "Fügen Sie das Alter der Kinder hinzu",
+        "search": "Sehen Sie, wer in der Nähe wohnt",
+        "connect": "Beginnen Sie die Kommunikation"
+      }
+    },
+    "footer": {
+      "description": "Dieses Projekt wurde von Familien erstellt, die selbst mit Isolation in einem neuen Land konfrontiert waren. Wir glauben, dass eine warme Gemeinschaft mit einem 'Hallo!' beginnt."
+    }
   },
   "profile": {
     "baseinfo": {

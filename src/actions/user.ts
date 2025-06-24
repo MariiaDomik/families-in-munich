@@ -4,6 +4,17 @@ import bcrypt from "bcrypt"
 import { redirect } from "next/navigation";
 import { UserRegistration, UserLogin, User, GoogleUserRegistration, UserProfileData } from "@/types/User";
 import { ProfileData } from "@/types/ProfileData";
+import { Child } from "@/types/Child";
+
+export interface UserForMap {
+  id: string;
+  name?: string;
+  latitude: number;
+  longitude: number;
+  city?: string;
+  district?: string;
+  children: Child[];
+}
 
 export async function registerUser(userData: UserRegistration) {
     const hashedPassword = bcrypt.hash(userData.password, 10);
@@ -310,6 +321,19 @@ export async function getUsersByChildAge(age: number) {
       FROM users u
       JOIN children c ON u.id = c.user_id
       WHERE c.birth_year = ${targetYear}
+      GROUP BY u.id
+    `;
+    return result;
+  }
+export async function getUsersWithChildrenSimilarAge(age: number) {
+    const currentYear = new Date().getFullYear();
+    const targetYear = currentYear - age;
+  
+    const result = await sql`
+      SELECT u.id, u.name, json_agg(c.*) AS children
+      FROM users u
+      JOIN children c ON u.id = c.user_id
+      WHERE c.birth_year BETWEEN ${targetYear - 1} AND ${targetYear + 1}
       GROUP BY u.id
     `;
     return result;

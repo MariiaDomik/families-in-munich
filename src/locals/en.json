@@ -26,7 +26,38 @@
         "description": "This App helps you connect with other families in Munich",
         "btn_start": "Start",
         "btn_login": "Sign in",
-        "btn_register": "Sign up now"
+        "btn_register": "Sign up now",
+        "hero": {
+            "title": "You are not alone here",
+            "subtitle": "Find friends, support and new acquaintances among Russian-speaking families in Munich",
+            "cta_button": "Start finding friends"
+        },
+        "features": {
+            "loneliness": {
+                "title": "Loneliness in emigration",
+                "description": "When children miss their friends and you miss support, the days become longer."
+            },
+            "language": {
+                "title": "Contacts in native language",
+                "description": "Communication in Russian is not only comfort, but also cultural unity."
+            },
+            "community": {
+                "title": "Family circle nearby",
+                "description": "Meetings at the playground, joint trips, exchange of children's things — this is how community is born."
+            }
+        },
+        "how_it_works": {
+            "title": "How it works?",
+            "steps": {
+                "location": "Specify your district",
+                "children": "Add children's age",
+                "search": "See who lives nearby",
+                "connect": "Start communication"
+            }
+        },
+        "footer": {
+            "description": "This project was created by families who themselves faced isolation in a new country. We believe that a warm community begins with one 'hello!'"
+        }
     },
     "profile": {
         "baseinfo": {

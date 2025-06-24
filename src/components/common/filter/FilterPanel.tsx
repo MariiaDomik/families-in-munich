@@ -38,7 +38,7 @@ export default function FilterPanel({ onFilter }: FilterPanelProps) {
           ))}
         </select>
         </div>
-        <DistrictSelector districts={munichDistricts} onSelect={setDistrict} />
+        <DistrictSelector onSelect={setDistrict} />
       <button type="submit" className="btn">Фильтровать</button>
     </form>
   );

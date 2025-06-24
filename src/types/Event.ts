@@ -6,7 +6,7 @@ export interface Event {
     description: string;
     date: string;
     location: string;
-    image?: string;
+    img_url?: string;
     participants: EventParticipant[];
     creator: EventParticipant;
     latitude?: number;

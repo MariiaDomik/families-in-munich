@@ -26,9 +26,9 @@ export default function EventsListView({ locale }: Props) {
     <ListView
       items={events}
       renderItem={event => (
-        <Link key={event.id} href={`/${locale}/events/${event.id}`}>
-          <EventCard key={event.id} event={event} />
-        </Link>
+        // <Link key={event.id} href={`/${locale}/events/${event.id}`}>
+          <EventCard key={event.id} event={event} locale={locale} />
+        // </Link>
       )}
       emptyText="Нет событий."
     />

@@ -6,7 +6,12 @@ const nextConfig: NextConfig = {
 };
 module.exports = {
     images: {
-      domains: ['example.com', 'learnbestcoding.com'],
+        remotePatterns: [
+            {
+              protocol: 'https',
+              hostname: '**',
+            },
+          ],
     },
   }
  
