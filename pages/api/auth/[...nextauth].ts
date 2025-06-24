@@ -49,8 +49,12 @@ export default NextAuth({
     },
     async signIn({ user, account }) {
       console.log("SIGNIN", { user, account });
+      if (!user.email) {
+        return false;
+      }
       if (account?.provider === "google") {
         try {
+          
           const googleUser = await getUserByEmail(user.email);
           if (!googleUser) {
             await registerGoogleUser({ email: user.email, name: user.name as string });

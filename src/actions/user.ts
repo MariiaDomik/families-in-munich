@@ -2,7 +2,7 @@
 import sql from "@/lib/db/postgre";
 import bcrypt from "bcrypt"
 import { redirect } from "next/navigation";
-import { UserRegistration, UserLogin, UserProfile, GoogleUserRegistration } from "@/types/User";
+import { UserRegistration, UserLogin, User, GoogleUserRegistration, UserProfileData } from "@/types/User";
 import { ProfileData } from "@/types/ProfileData";
 
 export async function registerUser(userData: UserRegistration) {
@@ -20,7 +20,7 @@ export async function registerGoogleUser(userData: GoogleUserRegistration) {
     return user;
 }
 
-export async function getFullUserProfile(userId: string): Promise<UserProfile | null> {
+export async function getFullUserProfile(userId: string): Promise<User | null> {
     const [profile] = await sql`
         SELECT 
             u.id, u.name, u.email, u.avatar_url,
@@ -35,7 +35,7 @@ export async function getFullUserProfile(userId: string): Promise<UserProfile | 
         LEFT JOIN hobbies h ON uh.hobby_id = h.id
         WHERE u.id = ${userId}
         GROUP BY u.id, p.about_me, p.district, p.city, p.latitude, p.longitude,
-            p.plz, p.created_at, p.updated_at, p.is_visible` as [UserProfile];
+            p.plz, p.created_at, p.updated_at, p.is_visible` as [User];
     return profile || null;
 }
 

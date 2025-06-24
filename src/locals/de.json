@@ -1,0 +1,60 @@
+{
+  "header": {
+    "siteName": "Familien München",
+    "nav": {
+      "home": "Startseite",
+      "map": "Karte",
+      "events": "Veranstaltungen",
+      "chats": "Chats",
+      "users": "Suche",
+      "profile": "Profil",
+      "logout": "Abmelden",
+      "login": "Anmelden",
+      "register": "Registrieren"
+    }
+  },
+  "startPage": {
+    "firstStep": {
+      "title": "Wo wohnen Sie?",
+      "label": "Geben Sie Ihre PLZ ein"
+    },
+    "secondStep": {
+      "title": "Ihre Kinder"
+    }
+  },
+  "registration": {
+    "title": "Konto erstellen",
+    "btn": "Registrieren"
+  },
+  "login": {
+    "title": "Anmelden",
+    "btn": "Einloggen"
+  },
+  "home": {
+    "h1": "Willkommen in der freundlichsten App für Familien in München!",
+    "description": "Diese App hilft Ihnen, sich mit anderen Familien in München zu vernetzen",
+    "btn_start": "Start",
+    "btn_login": "Anmelden",
+    "btn_register": "Jetzt registrieren"
+  },
+  "profile": {
+    "baseinfo": {
+      "title": "Grundinformationen",
+      "city": "Stadt",
+      "languages": "Gesprochene Sprachen"
+    },
+    "children": {
+      "title": "Kinder",
+      "child": "Kind",
+      "name": "Name",
+      "age": "Alter",
+      "bday": "Geburtstag"
+    },
+    "hobbies": {
+      "title": "Hobbys"
+    },
+    "availability": {
+      "title": "Verfügbarkeit"
+    }
+  }
+} 

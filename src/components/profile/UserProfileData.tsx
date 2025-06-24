@@ -1,6 +1,6 @@
 'use client'
 import { getFullUserProfile } from "@/actions/user";
-import { UserProfile } from "@/types/User";
+import { User } from "@/types/User";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ProfileField } from "./ProfileField";
@@ -10,7 +10,7 @@ interface UserProps {
 }
 
 export default function UserProfileData({ id }: UserProps) {
-    const [profile, setProfile] = useState<any>(null);
+    const [profile, setProfile] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -55,7 +55,7 @@ export default function UserProfileData({ id }: UserProps) {
                 <div className="relative w-24 h-24 mb-3">
                     <Image
                         src={profile.avatar_url || '/default-avatar.png'}
-                        alt={profile.name}
+                        alt={profile.name || 'User'}
                         fill
                         className="rounded-full object-cover border border-gray-200"
                     />
@@ -74,7 +74,7 @@ export default function UserProfileData({ id }: UserProps) {
                     <div>
                         <div className="text-sm text-gray-500 mb-1">Дети:</div>
                         <ul className="pl-4 list-disc text-gray-700">
-                            {profile.children.map((child: any, idx: number) => (
+                            {profile.children.map((child, idx) => (
                                 <li key={idx}>
                                     {child.name} — {child.age} лет, {child.gender}
                                 </li>

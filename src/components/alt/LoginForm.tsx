@@ -1,6 +1,5 @@
 'use client';
 import FormWrapper from "../common/FormWrapper";
-import staticData from "@/services/staticData";
 import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
@@ -8,10 +7,10 @@ import GoogleAuthButton from "../auth/GoogleAuthButton";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import router from "next/router";
+import { useTranslations } from 'next-intl';
 
 export default function LoginForm() {
-    const language = "ENG";
-    const data = staticData[language].login;
+    const t = useTranslations();
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,19 +33,19 @@ export default function LoginForm() {
 
     return (
         <div>
-        <FormWrapper title={data.title} className="space-y-6" onSubmit={handleSubmit}>
+        <FormWrapper title={t('login.title')} className="space-y-6" onSubmit={handleSubmit}>
             <Input
                 type="text"
                 label="Email"
                 name="email"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="your name here..."
+                placeholder={t('profile.children.name')}
                 containerStyle="mb-4 text-left"
                 required
             />
             <Input
                 type="password"
-                label="Password"
+                label={t('login.btn')}
                 name="password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
@@ -59,7 +58,7 @@ export default function LoginForm() {
                 buttonType={ButtonType.Primary}
                 className="w-full"
             >
-                {data.btn}
+                {t('login.btn')}
             </Button>
 
 

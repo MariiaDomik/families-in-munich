@@ -19,11 +19,11 @@
     },
     "login": {
         "title": "Login",
-        "btn": "Sign ip"
+        "btn": "Sign in"
     },
     "home": {
-        "h1": "Welcome to most freundly App for Families in Munich!",
-        "description": "This App help you to connect with andere Femilies in city Munich",
+        "h1": "Welcome to the friendliest App for Families in Munich!",
+        "description": "This App helps you connect with other families in Munich",
         "btn_start": "Start",
         "btn_login": "Sign in",
         "btn_register": "Sign up now"
@@ -41,7 +41,25 @@
             "age": "Age",
             "bday": "Birthday"
         },
-        "hobbies": {},
-        "availability": {}
+        "hobbies": {
+            "title": "Hobbies"
+        },
+        "availability": {
+            "title": "Availability"
+        }
+    },
+    "header": {
+        "siteName": "Families Munich",
+        "nav": {
+            "home": "Home",
+            "map": "Map",
+            "events": "Events",
+            "chats": "Chats",
+            "users": "Search",
+            "profile": "Profile",
+            "logout": "Logout",
+            "login": "Login",
+            "register": "Register"
+        }
     }
 }

@@ -2,10 +2,10 @@
 import React from "react";
 import { joinClassnames } from "@/lib/utils";
 import { Popup } from "react-leaflet";
-import { User } from "@/types/User";
+import { UserForMap } from "@/types/User";
 
 interface MapBubbleProps {
-    user: User;
+    user: UserForMap;
     children?: React.ReactNode;
     className?: string;
     onClick: () => void;

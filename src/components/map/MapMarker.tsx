@@ -1,16 +1,12 @@
 'use client'
-import { User } from "@/types/User";
+import { UserForMap } from "@/types/User";
 import { Marker, MarkerProps } from "react-leaflet";
 import MapPopup from "./MapPopup";
 import { useRouter } from "next/navigation";
 import { CustomIcon } from "./CustomIcon";
 
 interface MapMarkerProps extends MarkerProps {
-    user: User & {
-        latitude: number;
-        longitude: number;
-        avatar_url?: string;
-    };
+    user: UserForMap;
 }
 
 export default function MapMarker({ user, position, ...props }: MapMarkerProps) {

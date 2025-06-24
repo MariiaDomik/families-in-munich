@@ -1,14 +1,12 @@
 import { registerUser } from "@/actions/user";
 import FormWrapper from "../common/FormWrapper";
-import staticData from "@/services/staticData";
 import Input from "../common/Input";
 import Button from "../common/Button/Button";
 import { ButtonType } from "../common/Button/button.types";
+import { useTranslations } from 'next-intl';
 
 export default function RegisterForm() {
-    const language = "ENG";
-    const data = staticData[language].registration;
-
+    const t = useTranslations();
     const registerSubmit = async (formData: FormData) => {
         "use server"
         const name = formData.get("name") as string;
@@ -18,13 +16,13 @@ export default function RegisterForm() {
     }
 
     return (
-        <FormWrapper title={data.title} action={registerSubmit}>
+        <FormWrapper title={t('registration.title')} action={registerSubmit}>
             <Input
                 type="text"
-                label="Name"
+                label={t('profile.children.name')}
                 name="name"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="your name here..."
+                placeholder={t('profile.children.name')}
                 containerStyle="mb-4 text-left"
                 required
             /><Input
@@ -38,7 +36,7 @@ export default function RegisterForm() {
             />
             <Input
                 type="password"
-                label="Password"
+                label={t('login.btn')}
                 name="password"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
@@ -51,7 +49,7 @@ export default function RegisterForm() {
                 buttonType={ButtonType.Primary}
                 className="w-full"
             >
-                {data.btn}
+                {t('registration.btn')}
             </Button>
 
         </FormWrapper>

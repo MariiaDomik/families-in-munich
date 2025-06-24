@@ -8,3 +8,8 @@ export interface Child {
     gender: Gender;
     hobbies?: string[]; 
 }
+
+export interface ChildSimple {
+    gender: Gender;
+    age: number;
+  }

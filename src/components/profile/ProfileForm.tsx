@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 import { getProfileDataForReducer, saveProfileData } from "@/actions/user";
 import { ActionTypes } from "@/state/profile/reducerTypes";
 
-export default function ProfileInfo() {
+export default function ProfileForm() {
     const { data: session } = useSession();
     const [step, setStep] = useState<number>(1);
     const [state, dispatch] = useReducer(reducer, initialProfileState);
@@ -24,15 +24,14 @@ export default function ProfileInfo() {
     const prevStep = () => setStep((prev) => --prev);
 
     const steps = [
-        {component: <BaseInfo state={state} dispatch={dispatch} />, color: "from-sky-100 to-indigo-200"},
-        {component: <ChildrenInfo state={state} dispatch={dispatch} />, color: "from-pink-100 to-rose-200"},
-        {component: <HobbiesInfo state={state} dispatch={dispatch} />, color: "from-lime-70 to-green-200"},
-        {component: <AvailabilityInfo state={state} dispatch={dispatch} />, color: "from-amber-50 to-orange-100"},
-        {component: <PlacesInfo state={state} dispatch={dispatch} />, color: "from-cyan-50 to-indigo-100"}
+        <BaseInfo state={state} dispatch={dispatch} />,
+        <ChildrenInfo state={state} dispatch={dispatch} />,
+        <HobbiesInfo state={state} dispatch={dispatch} />,
+        <AvailabilityInfo state={state} dispatch={dispatch} />,
+        <PlacesInfo state={state} dispatch={dispatch} />
     ]
 
     useEffect(() => {
-        console.log(session?.user?.email);
             if (session?.user?.id) {
                 loadProfileData();
             }
@@ -82,11 +81,9 @@ export default function ProfileInfo() {
     }
 
     return (
-        <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${steps[step - 1].color} px-4`}>
-      <div className="w-full max-w-md">
         <FormWrapper action={handleSubmit} >
             <MotionContainer key={step.toString()}>
-                {steps[step - 1].component}
+                {steps[step - 1]}
             </MotionContainer>
             <div className="flex justify-between">
                 {step > 1 && (
@@ -105,7 +102,5 @@ export default function ProfileInfo() {
                 )}
             </div>
         </FormWrapper>
-        </div>
-        </div>
     )
 }
