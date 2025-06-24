@@ -6,15 +6,16 @@ import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import Icon from '@/components/common/Icon'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import LocaleSwitcher from '../common/LocaleSwitcher'
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { data: session } = useSession()
-  const router = useRouter()
-  const pathname = usePathname()
-  const t = useTranslations()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const t = useTranslations();
 
   const navigation = [
     { name: t('header.nav.home'), href: '/', icon: 'home' },
@@ -25,15 +26,15 @@ export default function Header() {
   ]
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/'
+    if (href === `/${locale}/`) {
+      return pathname === `/${locale}/`
     }
     return pathname?.startsWith(href)
   }
 
   const handleSignOut = async () => {
     await signOut({ redirect: false })
-    router.push('/login')
+    router.push(`/${locale}/login`)
   }
 
   return (
@@ -42,7 +43,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href={`/${locale}/`} className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 {/* <Icon imgUrl='' className="w-5 h-5 text-white" /> */}
               </div>
@@ -55,7 +56,7 @@ export default function Header() {
             {navigation.map((item) => (
               <Link
                 key={item.name}
-                href={item.href}
+                href={`/${locale}${item.href}`}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? 'text-blue-600 bg-blue-50'
@@ -73,7 +74,7 @@ export default function Header() {
             {session ? (
               <div className="flex items-center space-x-4">
                 <Link
-                  href="/profile"
+                  href={`/${locale}/profile`}
                   className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                 >
                   {/* <Icon imgUrl="user" className="w-4 h-4" /> */}
@@ -90,13 +91,13 @@ export default function Header() {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link
-                  href="/login"
+                  href={`/${locale}/login`}
                   className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   {t('header.nav.login')}
                 </Link>
                 <Link
-                  href="/register"
+                  href={`/${locale}/register`}
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
                 >
                   {t('header.nav.register')}
@@ -128,7 +129,7 @@ export default function Header() {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  href={`/${locale}/${item.href}`}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={`flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive(item.href)
@@ -145,7 +146,7 @@ export default function Header() {
                 <>
                   <div className="border-t border-gray-100 pt-2 mt-2">
                     <Link
-                      href="/profile"
+                      href={`/${locale}/profile`}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="flex items-center space-x-3 px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors"
                     >

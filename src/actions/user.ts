@@ -44,6 +44,25 @@ export async function getUserByEmail(email: string) {
     return user || null;
 }
 
+export async function getAllUsers(): Promise<User[]> {
+  const users = await sql`
+    SELECT
+      u.id, u.name, u.email, p.city, p.district, u.avatar_url, p.plz, p.about_me,
+      COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
+      COALESCE(array_agg(DISTINCT l.name) FILTER (WHERE l.id IS NOT NULL), '{}') AS languages,
+      COALESCE(array_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '{}') AS hobbies
+    FROM users u
+    LEFT JOIN profiles p ON p.user_id = u.id
+    LEFT JOIN children c ON c.user_id = u.id
+    LEFT JOIN user_languages ul ON ul.user_id = u.id
+    LEFT JOIN languages l ON ul.languageId = l.id
+    LEFT JOIN user_hobbies uh ON uh.user_id = u.id
+    LEFT JOIN hobbies h ON uh.hobby_id = h.id
+    GROUP BY u.id, p.city, p.district, u.avatar_url, p.plz, p.about_me
+  ` as User[];
+  return users;
+}
+
 // Новые методы для сохранения данных профиля
 export async function saveProfileData(userId: string, profileData: ProfileData) {
     try {

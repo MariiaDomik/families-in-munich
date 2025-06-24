@@ -62,6 +62,10 @@ export default function UserProfileData({ id }: UserProps) {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
                 <p className="text-gray-500">{profile.email}</p>
+                <div className="flex gap-3 mt-4">
+                    <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded transition">Подружиться</button>
+                    <button className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded transition">Отправить сообщение</button>
+                </div>
             </div>
 
             <div className="space-y-4">

@@ -43,6 +43,12 @@ export interface UserRegistration {
   name?: string;
 }
 
+export interface EventParticipant {
+  id: string;
+  avatar_url: string;
+  name?: string;
+}
+
 export interface GoogleUserRegistration {
   email: string;
   name?: string;
