@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ProfileField } from "./ProfileField";
 import { MdAutorenew } from "react-icons/md";
+import { useTranslations } from 'next-intl';
 
 interface UserProps {
     id: string;
@@ -13,6 +14,7 @@ interface UserProps {
 export default function UserProfileData({ id }: UserProps) {
     const [profile, setProfile] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const t = useTranslations('profile');
 
     useEffect(() => {
         async function fetchProfile() {
@@ -44,7 +46,7 @@ export default function UserProfileData({ id }: UserProps) {
     if (!profile) {
         return (
             <div className="text-center text-gray-500 py-12">
-                Пользователь не найден
+                {t('notFound')}
             </div>
         );
     }
@@ -63,24 +65,24 @@ export default function UserProfileData({ id }: UserProps) {
                 <h2 className="text-2xl font-bold text-gray-900">{profile.name}</h2>
                 <p className="text-gray-500">{profile.email}</p>
                 <div className="flex gap-3 mt-4">
-                    <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded transition">Подружиться</button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded transition">Отправить сообщение</button>
+                    <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded transition">{t('befriend')}</button>
+                    <button className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded transition">{t('sendMessage')}</button>
                 </div>
             </div>
 
             <div className="space-y-4">
-                <ProfileField label="Город" value={profile.city} />
-                <ProfileField label="Языки" value={profile.languages?.join(', ')} />
-                <ProfileField label="Хобби" value={profile.hobbies?.join(', ')} />
-                <ProfileField label="Любимые места" value={profile.favoritePlaces?.join(', ')} />
-                <ProfileField label="Доступность" value={profile.availability} />
+                <ProfileField label={t('city')} value={profile.city} />
+                <ProfileField label={t('languages')} value={profile.languages?.join(', ')} />
+                <ProfileField label={t('hobbies')} value={profile.hobbies?.join(', ')} />
+                <ProfileField label={t('favoritePlaces')} value={profile.favoritePlaces?.join(', ')} />
+                <ProfileField label={t('availability')} value={profile.availability} />
                 {profile.children && profile.children.length > 0 && (
                     <div>
-                        <div className="text-sm text-gray-500 mb-1">Дети:</div>
+                        <div className="text-sm text-gray-500 mb-1">{t('children')}:</div>
                         <ul className="pl-4 list-disc text-gray-700">
                             {profile.children.map((child, idx) => (
                                 <li key={idx}>
-                                    {child.name} — {child.age} лет, {child.gender}
+                                    {t('childInfo', { name: child.name, age: child.age, gender: child.gender })}
                                 </li>
                             ))}
                         </ul>

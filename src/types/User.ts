@@ -16,7 +16,7 @@ export interface User extends BaseUser {
   PLZ?: number;
   district: District;
   age?: number;
-  gender: Gender;
+  gender?: Gender;
   address?: string;
   children: Child[];
   about_me?: string;
@@ -31,7 +31,7 @@ export interface User extends BaseUser {
 }
 
 // Пользователь с координатами для карты
-export interface UserWithLocation extends User {
+export interface UserForMap extends User {
   latitude: number;
   longitude: number;
 }
@@ -71,6 +71,5 @@ export interface UserProfileData {
 
 // Утилитарные типы
 export type UserProfile = User;
-export type UserForMap = UserWithLocation;
 
 

@@ -134,20 +134,38 @@ export default function Header() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
-                <Link
-                  href={`/${locale}/login`}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  {authT('login')}
-                </Link>
-                <Link
-                  href={`/${locale}/register`}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
-                >
-                  {authT('register')}
-                </Link>
-              </div>
+              <>
+                {/* Мобильные/планшетные иконки */}
+                <div className="flex items-center space-x-2 md:hidden">
+                  <Link
+                    href={`/${locale}/login`}
+                    className="p-2 rounded-full text-gray-600 hover:text-blue-600 transition-colors"
+                  >
+                    <MdLogin className="w-6 h-6" />
+                  </Link>
+                  <Link
+                    href={`/${locale}/register`}
+                    className="p-2 rounded-full text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    <MdPersonAdd className="w-6 h-6" />
+                  </Link>
+                </div>
+                {/* Десктопные текстовые кнопки */}
+                <div className="hidden md:flex items-center space-x-2">
+                  <Link
+                    href={`/${locale}/login`}
+                    className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    {authT('login')}
+                  </Link>
+                  <Link
+                    href={`/${locale}/register`}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
+                  >
+                    {authT('register')}
+                  </Link>
+                </div>
+              </>
             )}
 
             {/* Mobile menu button */}

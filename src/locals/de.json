@@ -113,7 +113,17 @@
       "back": "Zurück",
       "next": "Weiter",
       "save": "Profil speichern"
-    }
+    },
+    "notFound": "Benutzer nicht gefunden",
+    "befriend": "Freundschaft schließen",
+    "sendMessage": "Nachricht senden",
+    "city": "Stadt",
+    "languages": "Sprachen",
+    "hobbies": "Hobbys",
+    "favoritePlaces": "Lieblingsorte",
+    "availability": "Verfügbarkeit",
+    "children": "Kinder",
+    "childInfo": "{name} — {age} Jahre, {gender}"
   },
   "common": {
     "loading": "Laden...",
@@ -121,6 +131,25 @@
     "loadingHobbies": "Hobbys werden geladen...",
     "loadingPlaces": "Orte werden geladen...",
     "cancel": "Abbrechen",
-    "add": "Hinzufügen"
+    "add": "Hinzufügen",
+    "deletePlace": "Ort löschen",
+    "deleteHobby": "Hobby löschen"
+  },
+  "map": {
+    "viewProfile": "Profil ansehen",
+    "unknownUser": "Unbekannter Nutzer",
+    "children": "Kinder",
+    "years": "Jahre",
+    "title": "Familienkarte in München",
+    "subtitle": "Finden Sie Familien in Ihrer Nähe und treten Sie der Community bei",
+    "activeFilters": "Aktive Filter:",
+    "ageFilter": "Kinderalter: {age} Jahre",
+    "districtFilter": "Bezirk: {district}",
+    "resetAll": "Alles zurücksetzen",
+    "filters": "Filter",
+    "totalFamilies": "Gesamtfamilien",
+    "shownOnMap": "Auf der Karte angezeigt",
+    "totalChildren": "Gesamtkinder",
+    "loadingMap": "Karte wird geladen..."
   }
 } 

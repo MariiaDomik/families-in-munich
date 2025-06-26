@@ -71,7 +71,7 @@ export default function HobbiesInfo({ state, dispatch }: StepsProps) {
                     type="button"
                     className="ml-1 text-blue-700 hover:text-red-500 focus:outline-none"
                     onClick={() => removeHobby(hobby)}
-                    aria-label="Удалить хобби"
+                    aria-label={t('deleteHobby', { default: 'Удалить хобби' })}
                   >
                     ×
                   </button>

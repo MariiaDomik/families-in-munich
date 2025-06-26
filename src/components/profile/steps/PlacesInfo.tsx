@@ -41,7 +41,7 @@ export default function PlacesInfo({ state, dispatch }: StepsProps) {
   };
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h2 className="text-xl font-semibold mb-4">{t('places.title', { default: 'Любимые места' })}</h2>
+      <h2 className="text-xl font-semibold mb-4">{t('favoritePlaces')}</h2>
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <label className="block font-semibold mb-2 text-gray-700">
           {t('favoritePlaces')}
@@ -66,7 +66,7 @@ export default function PlacesInfo({ state, dispatch }: StepsProps) {
                 type="button"
                 className="ml-1 text-blue-700 hover:text-red-500 focus:outline-none"
                 onClick={() => removePlace(place)}
-                aria-label="Удалить место"
+                aria-label={t('deletePlace')}
               >
                 ×
               </button>
@@ -76,7 +76,7 @@ export default function PlacesInfo({ state, dispatch }: StepsProps) {
       </div>
       <TagList
         items={state.favoritePlaces}
-        title={t('places.title', { default: 'Любимые места' })}
+        title={t('favoritePlaces')}
         inputName="place"
         setItems={(items: string[]) =>
           dispatch({

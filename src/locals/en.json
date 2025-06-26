@@ -104,7 +104,17 @@
             "back": "Back",
             "next": "Next",
             "save": "Save profile"
-        }
+        },
+        "notFound": "User not found",
+        "befriend": "Befriend",
+        "sendMessage": "Send message",
+        "city": "City",
+        "languages": "Languages",
+        "hobbies": "Hobbies",
+        "favoritePlaces": "Favorite places",
+        "availability": "Availability",
+        "children": "Children",
+        "childInfo": "{name} — {age} years, {gender}"
     },
     "header": {
         "siteName": "Families Munich",
@@ -126,6 +136,25 @@
         "loadingHobbies": "Loading hobbies...",
         "loadingPlaces": "Loading places...",
         "cancel": "Cancel",
-        "add": "Add"
+        "add": "Add",
+        "deletePlace": "Delete place",
+        "deleteHobby": "Delete hobby"
+    },
+    "map": {
+        "viewProfile": "View profile",
+        "unknownUser": "Unknown user",
+        "children": "Children",
+        "years": "years",
+        "title": "Families Map in Munich",
+        "subtitle": "Find families near you and join the community",
+        "activeFilters": "Active filters:",
+        "ageFilter": "Children's age: {age} years",
+        "districtFilter": "District: {district}",
+        "resetAll": "Reset all",
+        "filters": "Filters",
+        "totalFamilies": "Total families",
+        "shownOnMap": "Shown on map",
+        "totalChildren": "Total children",
+        "loadingMap": "Loading map..."
     }
 }

@@ -31,7 +31,7 @@ export async function registerGoogleUser(userData: GoogleUserRegistration) {
     return user;
 }
 
-export async function getFullUserProfile(userId: string) {
+export async function getFullUserProfile(userId: string): Promise<User | null> {
   try {
     const [profile] = await sql`
       SELECT
@@ -50,12 +50,27 @@ export async function getFullUserProfile(userId: string) {
       GROUP BY u.id, p.city, p.district, u.avatar_url, p.plz, p.about_me, p.availability
     `;
     if (!profile) return null;
+    // Приводим к типу User, заполняя обязательные поля дефолтными значениями
     return {
-      ...profile,
+      id: profile.id,
+      email: profile.email,
+      name: profile.name || '',
+      city: profile.city || '',
+      PLZ: profile.plz || undefined,
+      district: profile.district || { id: '', name: '', plz: '' },
+      age: undefined,
+      gender: profile.gender || 'unknown',
+      address: profile.address || '',
       children: profile.children || [],
+      about_me: profile.about_me || '',
+      avatar_url: profile.avatar_url || '',
+      created_at: profile.created_at || undefined,
+      updated_at: profile.updated_at || undefined,
+      is_visible: profile.is_visible || undefined,
       languages: profile.languages || [],
       hobbies: profile.hobbies || [],
-      favoritePlaces: [], // Пока оставляем пустым, пока не создадим таблицу
+      favoritePlaces: profile.favoritePlaces || [],
+      availability: profile.availability || '',
     };
   } catch (error) {
     console.error('Error loading profile data:', error);

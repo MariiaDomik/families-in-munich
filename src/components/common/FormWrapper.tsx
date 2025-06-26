@@ -8,7 +8,7 @@ export default function FormWrapper({ title, children, className, ...props} : Fo
     return (
         <div className="p-6">
             <h2>{title}</h2>
-            <form className={className} {...props}>
+            <form method={props.method || "post"} className={className} {...props}>
                 {children}
             </form>
         </div>

@@ -113,7 +113,15 @@
       "back": "Назад",
       "next": "Далее",
       "save": "Сохранить профиль"
-    }
+    },
+    "notFound": "Пользователь не найден",
+    "befriend": "Подружиться",
+    "sendMessage": "Отправить сообщение",
+    "hobbies": "Хобби",
+    "favoritePlaces": "Любимые места",
+    "availability": "Доступность",
+    "children": "Дети",
+    "childInfo": "{name} — {age} лет, {gender}"
   },
   "common": {
     "loading": "Загрузка...",
@@ -121,6 +129,25 @@
     "loadingHobbies": "Загрузка хобби...",
     "loadingPlaces": "Загрузка мест...",
     "cancel": "Отмена",
-    "add": "Добавить"
+    "add": "Добавить",
+    "deletePlace": "Удалить место",
+    "deleteHobby": "Удалить хобби"
+  },
+  "map": {
+    "viewProfile": "Посмотреть профиль",
+    "unknownUser": "Пользователь",
+    "children": "Дети",
+    "years": "лет",
+    "title": "Карта семей в Мюнхене",
+    "subtitle": "Найдите семьи рядом с вами и присоединитесь к сообществу",
+    "activeFilters": "Активные фильтры:",
+    "ageFilter": "Возраст детей: {age} лет",
+    "districtFilter": "Район: {district}",
+    "resetAll": "Сбросить все",
+    "filters": "Фильтры",
+    "totalFamilies": "Всего семей",
+    "shownOnMap": "Показано на карте",
+    "totalChildren": "Всего детей",
+    "loadingMap": "Загрузка карты..."
   }
 } 

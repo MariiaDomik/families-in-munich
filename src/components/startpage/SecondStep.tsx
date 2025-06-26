@@ -62,16 +62,16 @@ export default function SecondStep({ state, setState, onNextClick }: SecondStepP
             onClick={() => handleAddChild(Gender.female)}
             className="flex items-center gap-3 bg-gradient-to-r from-pink-100 to-rose-100 hover:from-pink-200 hover:to-rose-200 text-pink-700 rounded-full px-6 py-3 shadow-md transition-all duration-200 border border-pink-200"
           >
-            <Icon imgUrl="/public/icons/iconGirl.png" className="w-6 h-6" />
-            <span className="font-medium">{t('profile.children.child')}</span>
+            {/* <Icon imgUrl="/public/icons/iconGirl.png" className="w-6 h-6" /> */}
+            <span className="font-medium">👧 {t('profile.children.child')}</span>
             <span className="ml-1 text-lg font-bold">+</span>
           </Button>
           <Button
             onClick={() => handleAddChild(Gender.male)}
             className="flex items-center gap-3 bg-gradient-to-r from-blue-100 to-indigo-100 hover:from-blue-200 hover:to-indigo-200 text-blue-700 rounded-full px-6 py-3 shadow-md transition-all duration-200 border border-blue-200"
           >
-            <Icon imgUrl="/public/icons/iconBoy.png" className="w-6 h-6" />
-            <span className="font-medium">{t('profile.children.child')}</span>
+            {/* <Icon imgUrl="/public/icons/iconBoy.png" className="w-6 h-6" /> */}
+            <span className="font-medium">👦 {t('profile.children.child')}</span>
             <span className="ml-1 text-lg font-bold">+</span>
           </Button>
         </div>
@@ -163,6 +163,7 @@ export default function SecondStep({ state, setState, onNextClick }: SecondStepP
         {/* Кнопка продолжения */}
         <div className="flex justify-end pt-4">
           <Button 
+            type="button"
             onClick={onNextClick} 
             buttonType={ButtonType.Primary} 
             className="rounded-full px-8 py-3 shadow-md bg-gradient-to-r from-pink-500 to-rose-500 text-white hover:from-pink-600 hover:to-rose-600 transition-all duration-200 flex items-center gap-2"

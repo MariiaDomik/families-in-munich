@@ -2,7 +2,7 @@
 import { UserForMap } from "@/types/User";
 import { Marker, MarkerProps } from "react-leaflet";
 import MapPopup from "./MapPopup";
-import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import { CustomIcon } from "./CustomIcon";
 
 interface MapMarkerProps extends MarkerProps {
@@ -10,19 +10,17 @@ interface MapMarkerProps extends MarkerProps {
 }
 
 export default function MapMarker({ user, position, ...props }: MapMarkerProps) {
-    const router = useRouter();
+    const locale = useLocale();
     return (
         <Marker 
         key={user.id}
         icon={CustomIcon(user.avatar_url)}
         position={position || [user.latitude, user.longitude]} 
         {...props}
-        eventHandlers={{
-            click: () => router.push(`users/${user.id}`)
-        }} >
+        >
             <MapPopup 
-                user={user} 
-                onClick={() => router.push(`users/${user.id}`)}
+                user={user}
+                locale={locale}
             />
         </Marker>
     )

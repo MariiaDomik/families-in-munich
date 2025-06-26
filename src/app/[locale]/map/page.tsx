@@ -5,6 +5,7 @@ import { UserForMap } from "@/types/User";
 import { District } from "@/types/District";
 import { Gender } from "@/types/Gender";
 import { useMemo, useState, useEffect } from "react";
+import { useTranslations } from 'next-intl';
 
 interface FilterData {
   age: number;
@@ -12,6 +13,8 @@ interface FilterData {
 }
 
 export default function MapPage() {
+  const t = useTranslations('map');
+  const tCommon = useTranslations('common');
   const [filters, setFilters] = useState<FilterData>({ age: 0, district: null });
   const [users, setUsers] = useState<UserForMap[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,7 +94,7 @@ export default function MapPage() {
         <div className="w-full max-w-6xl">
           <div className="text-center py-12 text-gray-500">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-            Загрузка карты...
+            {t('loadingMap')}
           </div>
         </div>
       </div>
@@ -106,18 +109,18 @@ export default function MapPage() {
           <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl text-white">🗺️</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">Карта семей в Мюнхене</h1>
-          <p className="text-gray-600">Найдите семьи рядом с вами и присоединитесь к сообществу</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('title')}</h1>
+          <p className="text-gray-600">{t('subtitle')}</p>
         </div>
 
         {/* Активные фильтры */}
         {hasActiveFilters && (
           <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-blue-800 mb-2">Активные фильтры:</h3>
+            <h3 className="text-sm font-medium text-blue-800 mb-2">{t('activeFilters')}</h3>
             <div className="flex flex-wrap gap-2">
               {filters.age > 0 && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
-                  Возраст детей: {filters.age} лет
+                  {t('ageFilter', { age: filters.age })}
                   <button 
                     onClick={() => handleFilterChange({ ...filters, age: 0 })}
                     className="ml-2 text-blue-600 hover:text-blue-800"
@@ -128,7 +131,7 @@ export default function MapPage() {
               )}
               {filters.district && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-green-100 text-green-800">
-                  Район: {filters.district.name}
+                  {t('districtFilter', { district: filters.district.name })}
                   <button 
                     onClick={() => handleFilterChange({ ...filters, district: null })}
                     className="ml-2 text-green-600 hover:text-green-800"
@@ -141,7 +144,7 @@ export default function MapPage() {
                 onClick={() => handleFilterChange({ age: 0, district: null })}
                 className="text-sm text-gray-600 hover:text-gray-800 underline"
               >
-                Сбросить все
+                {t('resetAll')}
               </button>
             </div>
           </div>
@@ -151,7 +154,7 @@ export default function MapPage() {
         <div className="grid md:grid-cols-4 gap-6">
           <div className="col-span-1">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4">Фильтры</h2>
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('filters')}</h2>
               <FilterPanel onFilter={handleFilterChange} currentFilters={filters} />
             </div>
           </div>
@@ -169,17 +172,17 @@ export default function MapPage() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white rounded-lg shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-blue-600">{users.length}</div>
-            <div className="text-gray-600">Всего семей</div>
+            <div className="text-gray-600">{t('totalFamilies')}</div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-green-600">{filteredUsers.length}</div>
-            <div className="text-gray-600">Показано на карте</div>
+            <div className="text-gray-600">{t('shownOnMap')}</div>
           </div>
           <div className="bg-white rounded-lg shadow-md p-4 text-center">
             <div className="text-2xl font-bold text-purple-600">
               {users.reduce((total, user) => total + (user.children?.length || 0), 0)}
             </div>
-            <div className="text-gray-600">Всего детей</div>
+            <div className="text-gray-600">{t('totalChildren')}</div>
           </div>
         </div>
       </div>

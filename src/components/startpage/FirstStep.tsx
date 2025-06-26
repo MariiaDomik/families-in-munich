@@ -37,9 +37,6 @@ export default function FirstStep({ state, setState, onNextClick }: FirstStepPro
 
             <div className="space-y-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t('startPage.firstStep.label')}
-                    </label>
                     <Dropdown
                         label={t('startPage.firstStep.label')}
                         options={munichDistricts.map((d, index: number) => ({ 
@@ -70,6 +67,7 @@ export default function FirstStep({ state, setState, onNextClick }: FirstStepPro
 
                 <div className="flex justify-end pt-4">
                     <Button 
+                        type="button"
                         onClick={onNextClick}
                         buttonType={ButtonType.Primary}
                         className="rounded-full px-8 py-3 shadow-md bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 flex items-center gap-2"
