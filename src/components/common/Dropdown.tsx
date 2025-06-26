@@ -4,18 +4,19 @@ import { ChangeEvent } from 'react';
 
 interface Option {
   label: string;
-  value: number;
+  value: string | number;
 }
 
 interface DropdownProps {
   label?: string;
   options: Option[];
   onChange: (value: string) => void;
-  value?: number;
+  value?: string | number;
   name?: string;
+  disabled?: boolean;
 }
 
-export default function Dropdown({ label, options, onChange, value, name }: DropdownProps) {
+export default function Dropdown({ label, options, onChange, value, name, disabled }: DropdownProps) {
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onChange(e.target.value);
   };
@@ -27,6 +28,7 @@ export default function Dropdown({ label, options, onChange, value, name }: Drop
         name={name}
         value={value}
         onChange={handleChange}
+        disabled={disabled}
         className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
       >
         <option value="" disabled>Выберите...</option>

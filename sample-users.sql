@@ -12,20 +12,30 @@ INSERT INTO users (id, email, name, created_at, auth_provider, profileFilled) VA
 ('user-007', 'sarah.fischer@example.com', 'Sarah Fischer', '2024-01-21 08:45:00', 'local', true),
 ('user-008', 'david.meyer@example.com', 'David Meyer', '2024-01-22 15:10:00', 'local', true),
 ('user-009', 'julia.koch@example.com', 'Julia Koch', '2024-01-23 12:00:00', 'google', true),
-('user-010', 'christian.schulz@example.com', 'Christian Schulz', '2024-01-24 10:25:00', 'local', true);
+('user-010', 'christian.schulz@example.com', 'Christian Schulz', '2024-01-24 10:25:00', 'local', true),
+('test-user-1', 'anna@example.com', 'Anna Schmidt', NOW(), 'local'),
+('test-user-2', 'maria@example.com', 'Maria Ivanova', NOW(), 'local'),
+('test-user-3', 'elena@example.com', 'Elena Petrova', NOW(), 'local'),
+('test-user-4', 'sophie@example.com', 'Sophie Müller', NOW(), 'local'),
+('test-user-5', 'lisa@example.com', 'Lisa Weber', NOW(), 'local');
 
 -- 2. Добавление профилей пользователей
-INSERT INTO profiles (userId, city, availability, created_at, updated_at) VALUES
-('user-001', 'München', 'Weekends and evenings', '2024-01-15 10:30:00', '2024-01-15 10:30:00'),
-('user-002', 'München', 'Weekdays after 6 PM', '2024-01-16 14:20:00', '2024-01-16 14:20:00'),
-('user-003', 'München', 'Flexible schedule', '2024-01-17 09:15:00', '2024-01-17 09:15:00'),
-('user-004', 'München', 'Weekends only', '2024-01-18 16:45:00', '2024-01-18 16:45:00'),
-('user-005', 'München', 'Evenings and weekends', '2024-01-19 11:30:00', '2024-01-19 11:30:00'),
-('user-006', 'München', 'Weekdays 9 AM - 5 PM', '2024-01-20 13:20:00', '2024-01-20 13:20:00'),
-('user-007', 'München', 'Weekends and holidays', '2024-01-21 08:45:00', '2024-01-21 08:45:00'),
-('user-008', 'München', 'Flexible, prefer mornings', '2024-01-22 15:10:00', '2024-01-22 15:10:00'),
-('user-009', 'München', 'Afternoons and weekends', '2024-01-23 12:00:00', '2024-01-23 12:00:00'),
-('user-010', 'München', 'Evenings after 7 PM', '2024-01-24 10:25:00', '2024-01-24 10:25:00');
+INSERT INTO profiles (userId, city, district, availability, created_at, updated_at, latitude, longitude) VALUES
+('user-001', 'München', 'Alt-Aubing', 'Weekends and evenings', '2024-01-15 10:30:00', '2024-01-15 10:30:00', 48.1478, 11.5687),
+('user-002', 'München', 'Alt-Riem', 'Weekdays after 6 PM', '2024-01-16 14:20:00', '2024-01-16 14:20:00', 48.1589, 11.5857),
+('user-003', 'München', 'Am Hart', 'Flexible schedule', '2024-01-17 09:15:00', '2024-01-17 09:15:00', 48.1333, 11.6000),
+('user-004', 'München', 'Am Riesenfeld', 'Weekends only', '2024-01-18 16:45:00', '2024-01-18 16:45:00', 48.1500, 11.5333),
+('user-005', 'München', 'Am Rüpprechtsplatz', 'Evenings and weekends', '2024-01-19 11:30:00', '2024-01-19 11:30:00', 48.1167, 11.5500),
+('user-006', 'München', 'Am Westbad', 'Weekdays 9 AM - 5 PM', '2024-01-20 13:20:00', '2024-01-20 13:20:00', 48.1478, 11.5687),
+('user-007', 'München', 'Amalienburgstraße', 'Weekends and holidays', '2024-01-21 08:45:00', '2024-01-21 08:45:00', 48.1589, 11.5857),
+('user-008', 'München', 'Ambergstraße', 'Flexible, prefer mornings', '2024-01-22 15:10:00', '2024-01-22 15:10:00', 48.1333, 11.6000),
+('user-009', 'München', 'Amiraplatz', 'Afternoons and weekends', '2024-01-23 12:00:00', '2024-01-23 12:00:00', 48.1500, 11.5333),
+('user-010', 'München', 'Ammerthal', 'Evenings after 7 PM', '2024-01-24 10:25:00', '2024-01-24 10:25:00', 48.1167, 11.5500),
+('test-user-1', 'Munich', 'Maxvorstadt', 48.1478, 11.5687, NOW(), NOW()),
+('test-user-2', 'Munich', 'Schwabing', 48.1589, 11.5857, NOW(), NOW()),
+('test-user-3', 'Munich', 'Haidhausen', 48.1333, 11.6000, NOW(), NOW()),
+('test-user-4', 'Munich', 'Neuhausen', 48.1500, 11.5333, NOW(), NOW()),
+('test-user-5', 'Munich', 'Sendling', 48.1167, 11.5500, NOW(), NOW());
 
 -- 3. Добавление детей
 INSERT INTO children (userId, name, age, gender, birthday, created_at) VALUES
@@ -64,7 +74,13 @@ INSERT INTO children (userId, name, age, gender, birthday, created_at) VALUES
 
 -- Christian Schulz's children
 ('user-010', 'Benjamin', 4, 'boy', '2020-03-09', '2024-01-24 10:25:00'),
-('user-010', 'Harper', 2, 'girl', '2022-08-14', '2024-01-24 10:25:00');
+('user-010', 'Harper', 2, 'girl', '2022-08-14', '2024-01-24 10:25:00'),
+('test-user-1', 'Emma', 5, 'female', '2019-03-15', NOW()),
+('test-user-1', 'Lucas', 3, 'male', '2021-07-22', NOW()),
+('test-user-2', 'Mia', 7, 'female', '2017-11-08', NOW()),
+('test-user-3', 'Noah', 4, 'male', '2020-05-12', NOW()),
+('test-user-4', 'Sophia', 6, 'female', '2018-09-30', NOW()),
+('test-user-5', 'Felix', 2, 'male', '2022-01-25', NOW());
 
 -- 4. Добавление языков пользователей
 INSERT INTO user_languages (userId, languageId, created_at) VALUES

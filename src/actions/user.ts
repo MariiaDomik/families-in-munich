@@ -17,7 +17,7 @@ export interface UserForMap {
 }
 
 export async function registerUser(userData: UserRegistration) {
-    const hashedPassword = bcrypt.hash(userData.password, 10);
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
     const created_at = new Date(Date.now()).toISOString();
     const [user] = await sql`INSERT INTO users (email, password_hash, name, created_at, auth_provider) VALUES (${userData.email}, ${hashedPassword}, ${userData.name}, ${created_at}, 'local')`;
     redirect("/");
@@ -31,45 +31,71 @@ export async function registerGoogleUser(userData: GoogleUserRegistration) {
     return user;
 }
 
-export async function getFullUserProfile(userId: string): Promise<User | null> {
+export async function getFullUserProfile(userId: string) {
+  try {
     const [profile] = await sql`
-        SELECT 
-            u.id, u.name, u.email, u.avatar_url,
-            p.about_me, p.district, p.city, p.latitude, p.longitude,
-            p.plz, p.created_at, p.updated_at, p.is_visible,
-            COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
-            COALESCE(json_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '[]') AS hobbies
-        FROM users u
-        LEFT JOIN profiles p ON p.user_id = u.id
-        LEFT JOIN children c ON c.user_id = u.id
-        LEFT JOIN user_hobbies uh ON uh.user_id = u.id
-        LEFT JOIN hobbies h ON uh.hobby_id = h.id
-        WHERE u.id = ${userId}
-        GROUP BY u.id, p.about_me, p.district, p.city, p.latitude, p.longitude,
-            p.plz, p.created_at, p.updated_at, p.is_visible` as [User];
-    return profile || null;
+      SELECT
+        u.id, u.name, u.email, p.city, p.district, u.avatar_url, p.plz, p.about_me, p.availability,
+        COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
+        COALESCE(array_agg(DISTINCT l.name) FILTER (WHERE l.id IS NOT NULL), '{}') AS languages,
+        COALESCE(array_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '{}') AS hobbies
+      FROM users u
+      LEFT JOIN profiles p ON p.user_id = u.id
+      LEFT JOIN children c ON c.user_id = u.id
+      LEFT JOIN user_languages ul ON ul.user_id = u.id
+      LEFT JOIN languages l ON ul.languageId = l.id
+      LEFT JOIN user_hobbies uh ON uh.user_id = u.id
+      LEFT JOIN hobbies h ON uh.hobby_id = h.id
+      WHERE u.id = ${userId}
+      GROUP BY u.id, p.city, p.district, u.avatar_url, p.plz, p.about_me, p.availability
+    `;
+    if (!profile) return null;
+    return {
+      ...profile,
+      children: profile.children || [],
+      languages: profile.languages || [],
+      hobbies: profile.hobbies || [],
+      favoritePlaces: [], // Пока оставляем пустым, пока не создадим таблицу
+    };
+  } catch (error) {
+    console.error('Error loading profile data:', error);
+    return null;
+  }
 }
 
 export async function getUserByEmail(email: string) {
-    const [user] = await sql`SELECT * FROM users WHERE email = ${email}`;
+    console.log('getUserByEmail called with:', email);
+    const [user] = await sql`
+        SELECT id, email, name, password_hash, auth_provider 
+        FROM users 
+        WHERE email = ${email}
+    `;
+    console.log('getUserByEmail result:', user);
     return user || null;
 }
 
 export async function getAllUsers(): Promise<User[]> {
   const users = await sql`
     SELECT
-      u.id, u.name, u.email, p.city, p.district, u.avatar_url, p.plz, p.about_me,
+      u.id, u.name, u.email, p.city, 
+      CASE 
+        WHEN p.district IS NOT NULL THEN 
+          json_build_object('id', d.id, 'name', d.name, 'plz', d.plz)
+        ELSE NULL 
+      END AS district,
+      u.avatar_url, p.plz, p.about_me,
       COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children,
       COALESCE(array_agg(DISTINCT l.name) FILTER (WHERE l.id IS NOT NULL), '{}') AS languages,
       COALESCE(array_agg(DISTINCT h.name) FILTER (WHERE h.id IS NOT NULL), '{}') AS hobbies
     FROM users u
     LEFT JOIN profiles p ON p.user_id = u.id
+    LEFT JOIN districts d ON d.name = p.district
     LEFT JOIN children c ON c.user_id = u.id
     LEFT JOIN user_languages ul ON ul.user_id = u.id
     LEFT JOIN languages l ON ul.languageId = l.id
     LEFT JOIN user_hobbies uh ON uh.user_id = u.id
     LEFT JOIN hobbies h ON uh.hobby_id = h.id
-    GROUP BY u.id, p.city, p.district, u.avatar_url, p.plz, p.about_me
+    GROUP BY u.id, p.city, p.district, d.id, d.name, d.plz, u.avatar_url, p.plz, p.about_me
   ` as User[];
   return users;
 }
@@ -115,7 +141,7 @@ async function saveBasicProfileInfo(userId: string, profileData: ProfileData) {
     
     // Проверяем, существует ли уже профиль
     const [existingProfile] = await sql`
-        SELECT id FROM profiles WHERE userId = ${userId}
+        SELECT id FROM profiles WHERE user_id = ${userId}
     `;
 
     if (existingProfile) {
@@ -123,12 +149,12 @@ async function saveBasicProfileInfo(userId: string, profileData: ProfileData) {
         await sql`
             UPDATE profiles 
             SET city = ${profileData.city}, updated_at = ${updated_at}
-            WHERE userId = ${userId}
+            WHERE user_id = ${userId}
         `;
     } else {
         // Создаем новый профиль
         await sql`
-            INSERT INTO profiles (userId, city, created_at, updated_at)
+            INSERT INTO profiles (user_id, city, created_at, updated_at)
             VALUES (${userId}, ${profileData.city}, ${updated_at}, ${updated_at})
         `;
     }
@@ -136,13 +162,13 @@ async function saveBasicProfileInfo(userId: string, profileData: ProfileData) {
 
 async function saveChildren(userId: string, children: any[]) {
     // Удаляем существующих детей
-    await sql`DELETE FROM children WHERE userId = ${userId}`;
+    await sql`DELETE FROM children WHERE user_id = ${userId}`;
 
     // Добавляем новых детей
     for (const child of children) {
         if (child.name && child.age) {
             await sql`
-                INSERT INTO children (userId, name, age, gender, birthday)
+                INSERT INTO children (user_id, name, age, gender, birthday)
                 VALUES (
                     ${userId}, 
                     ${child.name}, 
@@ -157,7 +183,7 @@ async function saveChildren(userId: string, children: any[]) {
 
 async function saveLanguages(userId: string, languages: string[]) {
     // Удаляем существующие языки
-    await sql`DELETE FROM user_languages WHERE userId = ${userId}`;
+    await sql`DELETE FROM user_languages WHERE user_id = ${userId}`;
 
     // Добавляем новые языки
     for (const language of languages) {
@@ -175,7 +201,7 @@ async function saveLanguages(userId: string, languages: string[]) {
 
             // Связываем пользователя с языком
             await sql`
-                INSERT INTO user_languages (userId, languageId)
+                INSERT INTO user_languages (user_id, languageId)
                 VALUES (${userId}, ${langRecord.id})
             `;
         }
@@ -184,7 +210,7 @@ async function saveLanguages(userId: string, languages: string[]) {
 
 async function saveHobbies(userId: string, hobbies: string[]) {
     // Удаляем существующие хобби
-    await sql`DELETE FROM user_hobbies WHERE userId = ${userId}`;
+    await sql`DELETE FROM user_hobbies WHERE user_id = ${userId}`;
 
     // Добавляем новые хобби
     for (const hobby of hobbies) {
@@ -202,7 +228,7 @@ async function saveHobbies(userId: string, hobbies: string[]) {
 
             // Связываем пользователя с хобби
             await sql`
-                INSERT INTO user_hobbies (userId, hobbyId)
+                INSERT INTO user_hobbies (user_id, hobby_id)
                 VALUES (${userId}, ${hobbyRecord.id})
             `;
         }
@@ -210,30 +236,9 @@ async function saveHobbies(userId: string, hobbies: string[]) {
 }
 
 async function saveFavoritePlaces(userId: string, places: string[]) {
-    // Удаляем существующие места
-    await sql`DELETE FROM user_favorite_places WHERE userId = ${userId}`;
-
-    // Добавляем новые места
-    for (const place of places) {
-        if (place.trim()) {
-            // Сначала проверяем/создаем место в таблице places
-            let [placeRecord] = await sql`
-                SELECT id FROM places WHERE name = ${place.trim()}
-            `;
-
-            if (!placeRecord) {
-                [placeRecord] = await sql`
-                    INSERT INTO places (name) VALUES (${place.trim()}) RETURNING id
-                `;
-            }
-
-            // Связываем пользователя с местом
-            await sql`
-                INSERT INTO user_favorite_places (userId, placeId)
-                VALUES (${userId}, ${placeRecord.id})
-            `;
-        }
-    }
+    // Пока пропускаем сохранение любимых мест, пока не создадим таблицу
+    console.log('Saving favorite places:', places);
+    // TODO: Реализовать после создания таблицы user_favorite_places
 }
 
 async function saveAvailability(userId: string, availability: string) {
@@ -243,7 +248,7 @@ async function saveAvailability(userId: string, availability: string) {
     await sql`
         UPDATE profiles 
         SET availability = ${availability}, updated_at = ${updated_at}
-        WHERE userId = ${userId}
+        WHERE user_id = ${userId}
     `;
 }
 
@@ -252,12 +257,12 @@ export async function getProfileDataForReducer(userId: string): Promise<ProfileD
     try {
         // Получаем основную информацию профиля
         const [profile] = await sql`
-            SELECT city, availability FROM profiles WHERE userId = ${userId}
+            SELECT city, availability FROM profiles WHERE user_id = ${userId}
         `;
 
         // Получаем детей
         const children = await sql`
-            SELECT name, age, gender, birthday FROM children WHERE userId = ${userId}
+            SELECT name, age, gender, birthday FROM children WHERE user_id = ${userId}
         `;
 
         // Получаем языки
@@ -265,7 +270,7 @@ export async function getProfileDataForReducer(userId: string): Promise<ProfileD
             SELECT l.name 
             FROM user_languages ul 
             JOIN languages l ON ul.languageId = l.id 
-            WHERE ul.userId = ${userId}
+            WHERE ul.user_id = ${userId}
         `;
 
         // Получаем хобби
@@ -273,16 +278,11 @@ export async function getProfileDataForReducer(userId: string): Promise<ProfileD
             SELECT h.name 
             FROM user_hobbies uh 
             JOIN hobbies h ON uh.hobbyId = h.id 
-            WHERE uh.userId = ${userId}
+            WHERE uh.user_id = ${userId}
         `;
 
-        // Получаем любимые места
-        const favoritePlaces = await sql`
-            SELECT p.name 
-            FROM user_favorite_places ufp 
-            JOIN places p ON ufp.placeId = p.id 
-            WHERE ufp.userId = ${userId}
-        `;
+        // Пока возвращаем пустой массив для любимых мест
+        const favoritePlaces: any[] = [];
 
         return {
             city: profile?.city || '',
@@ -405,3 +405,70 @@ export async function getUsersWithChildrenSimilarAge(age: number) {
     `;
     return result;
   }
+
+export async function createTestUser() {
+  try {
+    const testEmail = 'test@example.com';
+    const testPassword = 'password123';
+    const hashedPassword = await bcrypt.hash(testPassword, 10);
+    
+    const [user] = await sql`
+      INSERT INTO users (email, name, password_hash, auth_provider, profileFilled)
+      VALUES (${testEmail}, 'Test User', ${hashedPassword}, 'local', false)
+      ON CONFLICT (email) DO UPDATE SET 
+        name = EXCLUDED.name,
+        password_hash = EXCLUDED.password_hash
+      RETURNING id, email, name, profileFilled
+    `;
+    
+    console.log('Test user created/updated:', user);
+    return user;
+  } catch (error) {
+    console.error('Error creating test user:', error);
+    return null;
+  }
+}
+
+export async function getLanguages() {
+  const languages = await sql`SELECT * FROM languages ORDER BY name`;
+  return languages;
+}
+
+export async function getHobbies() {
+  const hobbies = await sql`SELECT * FROM hobbies ORDER BY name`;
+  return hobbies;
+}
+
+export async function getUsersForMap(): Promise<UserForMap[]> {
+  try {
+    const users = await sql`
+      SELECT
+        u.id, 
+        u.name, 
+        u.email,
+        COALESCE(p.latitude, 48.1351) as latitude,
+        COALESCE(p.longitude, 11.5820) as longitude,
+        p.city,
+        CASE 
+          WHEN p.district IS NOT NULL THEN 
+            json_build_object('id', d.id, 'name', d.name, 'plz', d.plz)
+          ELSE NULL 
+        END AS district,
+        COALESCE(json_agg(DISTINCT c.*) FILTER (WHERE c.id IS NOT NULL), '[]') AS children
+      FROM users u
+      LEFT JOIN profiles p ON p.user_id = u.id
+      LEFT JOIN districts d ON d.name = p.district
+      LEFT JOIN children c ON c.user_id = u.id
+      WHERE p.latitude IS NOT NULL AND p.longitude IS NOT NULL
+      GROUP BY u.id, u.name, u.email, p.latitude, p.longitude, p.city, p.district, d.id, d.name, d.plz
+    ` as UserForMap[];
+    
+    return users.map(user => ({
+      ...user,
+      children: user.children || []
+    }));
+  } catch (error) {
+    console.error('Error fetching users for map:', error);
+    return [];
+  }
+}

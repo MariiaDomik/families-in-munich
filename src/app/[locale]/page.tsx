@@ -11,9 +11,9 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section with background image */}
-      <section className="relative md:h-4/6 h-2/3 flex items-center">
+      <section className="relative max-h-8/12 flex items-center">
         <Image
-          src="/images/family_in_city.png"
+          src="/images/illustr_f.jpeg"
           alt="Family in city"
           fill
           className="object-cover"

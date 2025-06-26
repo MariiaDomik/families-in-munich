@@ -4,7 +4,7 @@ import ListView from '../ListView';
 import UserCard from './UserCard';
 import { User } from '@/types/User';
 import { useEffect, useState } from 'react';
-import LoadingListView from '../LoadingListView';
+import LoadingListView from '../../loaders/LoadingListView';
 
 interface Props {
   locale: string;

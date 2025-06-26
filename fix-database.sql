@@ -1,4 +1,17 @@
--- Создание таблицы пользователей
+-- Скрипт для исправления структуры базы данных
+-- Выполняйте по порядку
+
+-- 1. Создание таблицы районов (если не существует)
+CREATE TABLE IF NOT EXISTS districts (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    plz VARCHAR(10) NOT NULL,
+    center_lat DECIMAL(10, 8),
+    center_lng DECIMAL(11, 8),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. Создание таблицы пользователей (если не существует)
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR(255) PRIMARY KEY DEFAULT gen_random_uuid()::text,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -11,19 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Создание таблицы районов Мюнхена
-CREATE TABLE IF NOT EXISTS districts (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
-    plz VARCHAR(10) NOT NULL,
-    center_lat DECIMAL(10, 8),
-    center_lng DECIMAL(11, 8),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Создание таблиц для профилей пользователей
-
--- Таблица профилей
+-- 3. Создание таблицы профилей (если не существует)
 CREATE TABLE IF NOT EXISTS profiles (
     id SERIAL PRIMARY KEY,
     userId VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица детей
+-- 4. Создание таблицы детей (если не существует)
 CREATE TABLE IF NOT EXISTS children (
     id SERIAL PRIMARY KEY,
     userId VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -45,14 +46,14 @@ CREATE TABLE IF NOT EXISTS children (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица языков
+-- 5. Создание таблицы языков (если не существует)
 CREATE TABLE IF NOT EXISTS languages (
     id SERIAL PRIMARY KEY,
     name VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица связи пользователей с языками
+-- 6. Создание таблицы связи пользователей с языками (если не существует)
 CREATE TABLE IF NOT EXISTS user_languages (
     id SERIAL PRIMARY KEY,
     userId VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -61,14 +62,14 @@ CREATE TABLE IF NOT EXISTS user_languages (
     UNIQUE(userId, languageId)
 );
 
--- Таблица хобби
+-- 7. Создание таблицы хобби (если не существует)
 CREATE TABLE IF NOT EXISTS hobbies (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица связи пользователей с хобби
+-- 8. Создание таблицы связи пользователей с хобби (если не существует)
 CREATE TABLE IF NOT EXISTS user_hobbies (
     id SERIAL PRIMARY KEY,
     userId VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -77,14 +78,14 @@ CREATE TABLE IF NOT EXISTS user_hobbies (
     UNIQUE(userId, hobbyId)
 );
 
--- Таблица мест
+-- 9. Создание таблицы мест (если не существует)
 CREATE TABLE IF NOT EXISTS places (
     id SERIAL PRIMARY KEY,
     name VARCHAR(200) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Таблица связи пользователей с любимыми местами
+-- 10. Создание таблицы связи пользователей с любимыми местами (если не существует)
 CREATE TABLE IF NOT EXISTS user_favorite_places (
     id SERIAL PRIMARY KEY,
     userId VARCHAR(255) NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -93,7 +94,7 @@ CREATE TABLE IF NOT EXISTS user_favorite_places (
     UNIQUE(userId, placeId)
 );
 
--- Индексы для улучшения производительности
+-- 11. Создание индексов (если не существуют)
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_profiles_userid ON profiles(userId);
 CREATE INDEX IF NOT EXISTS idx_profiles_district ON profiles(district);
@@ -102,7 +103,18 @@ CREATE INDEX IF NOT EXISTS idx_user_languages_userid ON user_languages(userId);
 CREATE INDEX IF NOT EXISTS idx_user_hobbies_userid ON user_hobbies(userId);
 CREATE INDEX IF NOT EXISTS idx_user_favorite_places_userid ON user_favorite_places(userId);
 
--- Вставка районов Мюнхена
+-- 12. Добавление поля district в таблицу profiles (если не существует)
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+                   WHERE table_name = 'profiles' AND column_name = 'district') THEN
+        ALTER TABLE profiles ADD COLUMN district VARCHAR(100) REFERENCES districts(name);
+    END IF;
+END $$;
+
+-- 13. Вставка базовых данных (если не существуют)
+
+-- Районы Мюнхена
 INSERT INTO districts (name, plz, center_lat, center_lng) VALUES 
     ('Alt-Aubing', '81249', 48.1589, 11.4289),
     ('Alt-Riem', '81829', 48.1234, 11.6890),
@@ -126,7 +138,7 @@ INSERT INTO districts (name, plz, center_lat, center_lng) VALUES
     ('Anzinger Straße', '81675', 48.1333, 11.6000)
 ON CONFLICT (name) DO NOTHING;
 
--- Вставка популярных языков
+-- Популярные языки
 INSERT INTO languages (name) VALUES 
     ('English'),
     ('German'),
@@ -140,7 +152,7 @@ INSERT INTO languages (name) VALUES
     ('Ukrainian')
 ON CONFLICT (name) DO NOTHING;
 
--- Вставка популярных хобби
+-- Популярные хобби
 INSERT INTO hobbies (name) VALUES 
     ('Hiking'),
     ('Cycling'),
@@ -159,7 +171,7 @@ INSERT INTO hobbies (name) VALUES
     ('Skiing')
 ON CONFLICT (name) DO NOTHING;
 
--- Вставка популярных мест в Мюнхене
+-- Популярные места в Мюнхене
 INSERT INTO places (name) VALUES 
     ('English Garden'),
     ('Olympic Park'),
@@ -176,4 +188,7 @@ INSERT INTO places (name) VALUES
     ('Residenz'),
     ('Frauenkirche'),
     ('Karlsplatz')
-ON CONFLICT (name) DO NOTHING; 
+ON CONFLICT (name) DO NOTHING;
+
+-- 14. Проверка и вывод информации о созданных таблицах
+SELECT 'Database structure updated successfully!' as status; 

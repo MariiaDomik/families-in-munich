@@ -4,7 +4,7 @@ import ListView from '../ListView';
 import EventCard from './EventCard';
 import Link from 'next/link';
 import type { Event } from '@/types/Event';
-import LoadingListView from '../LoadingListView';
+import LoadingListView from '../../loaders/LoadingListView';
 
 interface Props {
   locale:string;

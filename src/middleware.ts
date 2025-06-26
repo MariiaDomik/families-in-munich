@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { handleAuthMiddleware } from "./lib/middleware/auth";
 import { handleI18nMiddleware } from "./lib/middleware/intl";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const i18nResponse = handleI18nMiddleware(request);
     if (i18nResponse?.redirected || i18nResponse?.status !== 200) 
         return i18nResponse;
     console.log("middleware");
     
-    const authResponse = handleAuthMiddleware(request);
+    const authResponse = await handleAuthMiddleware(request);
     
     return authResponse || i18nResponse;
-    return NextResponse.next();
+    // return NextResponse.next();
 }
 
 export const config = {

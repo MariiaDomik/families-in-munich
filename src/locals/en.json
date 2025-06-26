@@ -1,16 +1,28 @@
 {
     "startPage": {
+        "welcome": {
+            "title": "Welcome to Families in Munich!",
+            "description": "Let's find families near you in just a few steps"
+        },
         "firstStep": {
             "title": "Where do you live?",
+            "subtitle": "Choose your district to find families nearby",
             "label": "Enter your PLZ",
+            "selected": "Selected district",
             "iconNext": "/public/icons/iconNext.png"
         },
         "secondStep": {
             "title": "Your Children",
+            "subtitle": "Add your children to find families with similar ages",
+            "childrenList": "Your children",
             "imgGirl": "/public/icons/iconGirl.png",
             "imgBoy": "/public/icons/iconBoy.png",
             "imgPlus": "/public/icons/iconPlus.png",
             "iconNext": "/public/icons/iconNext.png"
+        },
+        "mapStep": {
+            "title": "Discover Families",
+            "description": "See families living in your area"
         }
     },
     "registration": {
@@ -20,6 +32,12 @@
     "login": {
         "title": "Login",
         "btn": "Sign in"
+    },
+    "auth": {
+        "loggedInAs": "You are registered as {name}",
+        "login": "Sign In",
+        "logout": "Sign Out",
+        "register": "Sign Up"
     },
     "home": {
         "h1": "Welcome to the friendliest App for Families in Munich!",
@@ -68,15 +86,24 @@
         "children": {
             "title": "Children",
             "child": "Child",
+            "girl": "Girl",
+            "boy": "Boy",
             "name": "Name",
             "age": "Age",
-            "bday": "Birthday"
+            "bday": "Birthday",
+            "selectYear": "Select birth year"
         },
         "hobbies": {
             "title": "Hobbies"
         },
         "availability": {
             "title": "Availability"
+        },
+        "progress": {
+            "steps": ["Basic", "Children", "Hobbies", "Availability", "Places"],
+            "back": "Back",
+            "next": "Next",
+            "save": "Save profile"
         }
     },
     "header": {
@@ -92,5 +119,13 @@
             "login": "Login",
             "register": "Register"
         }
+    },
+    "common": {
+        "loading": "Loading...",
+        "loadingLanguages": "Loading languages...",
+        "loadingHobbies": "Loading hobbies...",
+        "loadingPlaces": "Loading places...",
+        "cancel": "Cancel",
+        "add": "Add"
     }
 }

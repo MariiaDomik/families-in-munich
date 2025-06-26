@@ -13,7 +13,7 @@ export interface BaseUser {
 // Полный профиль пользователя
 export interface User extends BaseUser {
   city: string;
-  PLZ: number;
+  PLZ?: number;
   district: District;
   age?: number;
   gender: Gender;

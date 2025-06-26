@@ -17,40 +17,61 @@ export default function MobileFooterNav() {
     { 
       name: t('home'), 
       href: '/', 
-      icon: <MdHome className="w-6 h-6" />,
-      activeIcon: '🏠'
+      icon: <MdHome color='gray' className="w-6 h-6" />,
+      activeIcon: <MdHome color='#2563eb' className="w-6 h-6" />,
+      activeTextColor: 'text-blue-600',
+      activeBgColor: 'bg-blue-50',
     },
     { 
       name: t('map'), 
       href: '/map', 
-      icon: <MdMap className="w-6 h-6" />,
-      activeIcon: '🗺️'
+      icon: <MdMap color='gray' className="w-6 h-6" />,
+      activeIcon: <MdMap color='#16a34a' className="w-6 h-6" />,
+      activeTextColor: 'text-green-600',
+      activeBgColor: 'bg-green-50',
     },
     { 
       name: t('events'), 
       href: '/events', 
-      icon: <MdEvent className="w-6 h-6" />,
-      activeIcon: '📅'
+      icon: <MdEvent color='gray' className="w-6 h-6" />,
+      activeIcon: <MdEvent color='#7c3aed' className="w-6 h-6" />,
+      activeTextColor: 'text-purple-600',
+      activeBgColor: 'bg-purple-50',
     },
     { 
       name: t('chats'), 
       href: '/chats', 
-      icon: <MdChat className="w-6 h-6" />,
-      activeIcon: '💬'
+      icon: <MdChat color='gray' className="w-6 h-6" />,
+      activeIcon: <MdChat color='#db2777' className="w-6 h-6" />,
+      activeTextColor: 'text-pink-600',
+      activeBgColor: 'bg-pink-50',
     },
     { 
       name: t('profile'), 
       href: '/profile', 
-      icon: <MdPerson className="w-6 h-6" />,
-      activeIcon: '👤'
+      icon: <MdPerson color='gray' className="w-6 h-6" />,
+      activeIcon: <MdPerson color='#ea580c' className="w-6 h-6" />,
+      activeTextColor: 'text-orange-600',
+      activeBgColor: 'bg-orange-50',
     }
   ]
 
   const isActive = (href: string) => {
+    const currentPath = pathname || '';
+    const localePath = `/${locale}`;
+    
     if (href === '/') {
-      return pathname === `/${locale}/`
+      return currentPath === localePath || currentPath === `${localePath}/`;
     }
-    return pathname?.startsWith(`/${locale}${href}`)
+    
+    return currentPath.startsWith(`${localePath}${href}`);
+  }
+
+  const getHref = (href: string) => {
+    if (href === '/') {
+      return `/${locale}`;
+    }
+    return `/${locale}${href}`;
   }
 
   // Если пользователь не авторизован, показываем только главную и карту
@@ -64,12 +85,9 @@ export default function MobileFooterNav() {
           return (
             <Link
               key={item.name}
-              href={`/${locale}${item.href}`}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200 ${
-                active 
-                  ? 'text-blue-600 bg-blue-50' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              href={getHref(item.href)}
+              className={`flex flex-col items-center justify-center flex-1 h-full transition-all duration-200
+                ${active ? `${item.activeTextColor} ${item.activeBgColor}` : 'text-gray-600 hover:text-gray-900'}`}
             >
               <div className="text-xl mb-1">
                 {active ? item.activeIcon : item.icon}

@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import { District } from '@/types/District';
-import Dropdown from '../Dropdown';
 
 interface Props {
   onSelect: (district: District, city: string) => void;
+  selectedDistrict?: District | null;
 }
 
-export default function DistrictSelector({ onSelect }: Props) {
+export default function DistrictSelector({ onSelect, selectedDistrict }: Props) {
   const [districts, setDistricts] = useState<District[]>([]);
   const [selectedId, setSelectedId] = useState<number>();
-  const [city, setCity] = useState<string>('Мюнхен');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,42 +27,50 @@ export default function DistrictSelector({ onSelect }: Props) {
       .finally(() => setLoading(false));
   }, []);
 
+  // Синхронизируем выбранный район
+  useEffect(() => {
+    if (selectedDistrict) {
+      setSelectedId(selectedDistrict.id);
+    } else {
+      setSelectedId(undefined);
+    }
+  }, [selectedDistrict]);
+
   const handleDistrictChange = (value: string) => {
     const id = Number(value);
     setSelectedId(id);
     const selected = districts.find(d => d.id === id);
-    if (selected) onSelect(selected, city);
+    if (selected) onSelect(selected, 'Мюнхен');
   };
 
-  const handleCityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
-    // Можно сбрасывать выбранный район при смене города, если нужно
-  };
+  if (loading) {
+    return (
+      <div className="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 text-sm">
+        Загрузка районов...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full p-3 border border-red-300 rounded-lg bg-red-50 text-red-500 text-sm">
+        {error}
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-4 p-4 bg-white rounded-xl shadow border border-gray-100">
-      <div>
-        <label htmlFor="city" className="block font-semibold mb-1 text-gray-700">Город</label>
-        <input
-          id="city"
-          type="text"
-          className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition"
-          value={city}
-          onChange={handleCityChange}
-          placeholder="Введите город"
-        />
-      </div>
-      <div>
-        <Dropdown
-          label="Район или индекс"
-          options={districts.map(d => ({ label: `${d.name} (${d.plz})`, value: d.id }))}
-          onChange={handleDistrictChange}
-          value={selectedId}
-          name="district"
-        />
-        {loading && <div className="text-xs text-gray-400 mt-2">Загрузка районов...</div>}
-        {error && <div className="text-xs text-red-500 mt-2">{error}</div>}
-      </div>
-    </div>
+    <select
+      value={selectedId || ''}
+      onChange={(e) => handleDistrictChange(e.target.value)}
+      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-colors"
+    >
+      <option value="">Все районы</option>
+      {districts.map(d => (
+        <option key={d.id} value={d.id}>
+          {d.name} ({d.plz})
+        </option>
+      ))}
+    </select>
   );
 }

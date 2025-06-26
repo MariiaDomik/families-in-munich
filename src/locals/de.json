@@ -13,13 +13,31 @@
       "register": "Registrieren"
     }
   },
+  "auth": {
+    "loggedInAs": "Sie sind registriert als {name}",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "register": "Registrieren"
+  },
   "startPage": {
+    "welcome": {
+      "title": "Willkommen bei Familien in München!",
+      "description": "Lassen Sie uns Familien in Ihrer Nähe in nur wenigen Schritten finden"
+    },
     "firstStep": {
       "title": "Wo wohnen Sie?",
-      "label": "Geben Sie Ihre PLZ ein"
+      "subtitle": "Wählen Sie Ihren Bezirk, um Familien in der Nähe zu finden",
+      "label": "Geben Sie Ihre PLZ ein",
+      "selected": "Ausgewählter Bezirk"
     },
     "secondStep": {
-      "title": "Ihre Kinder"
+      "title": "Ihre Kinder",
+      "subtitle": "Fügen Sie Ihre Kinder hinzu, um Familien mit ähnlichem Alter zu finden",
+      "childrenList": "Ihre Kinder"
+    },
+    "mapStep": {
+      "title": "Familien entdecken",
+      "description": "Sehen Sie Familien, die in Ihrer Gegend leben"
     }
   },
   "registration": {
@@ -77,15 +95,32 @@
     "children": {
       "title": "Kinder",
       "child": "Kind",
+      "girl": "Mädchen",
+      "boy": "Junge",
       "name": "Name",
       "age": "Alter",
-      "bday": "Geburtstag"
+      "bday": "Geburtstag",
+      "selectYear": "Geburtsjahr auswählen"
     },
     "hobbies": {
       "title": "Hobbys"
     },
     "availability": {
       "title": "Verfügbarkeit"
+    },
+    "progress": {
+      "steps": ["Grundinfo", "Kinder", "Hobbys", "Verfügbarkeit", "Orte"],
+      "back": "Zurück",
+      "next": "Weiter",
+      "save": "Profil speichern"
     }
+  },
+  "common": {
+    "loading": "Laden...",
+    "loadingLanguages": "Sprachen werden geladen...",
+    "loadingHobbies": "Hobbys werden geladen...",
+    "loadingPlaces": "Orte werden geladen...",
+    "cancel": "Abbrechen",
+    "add": "Hinzufügen"
   }
 } 

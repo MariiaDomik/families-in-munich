@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { registerUser } from '@/actions/user';
 import Input from '../common/Input';
 import Button from '../common/Button/Button';
 import { ButtonType } from '../common/Button/button.types';
 import GoogleAuthButton from './GoogleAuthButton';
+import { useLocale, useTranslations } from 'next-intl';
 
 export enum AuthFormType {
   Register = 'register',
@@ -24,6 +25,57 @@ export default function AuthForm({ authFormType = AuthFormType.Login }: AuthForm
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
+  const locale = useLocale();
+  const t = useTranslations('auth');
+
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  };
+
+  // Если пользователь уже авторизован, показываем сообщение и кнопку выхода
+  if (session?.user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div className="p-8 text-center">
+              <div className="mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl text-white">✓</span>
+                </div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                  {t('loggedInAs', { name: session.user.name || session.user.email })}
+                </h2>
+                <p className="text-gray-600">
+                  Вы уже авторизованы в системе
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <Button
+                  onClick={() => router.push(`/${locale}/profile`)}
+                  buttonType={ButtonType.Primary}
+                  className="w-full"
+                >
+                  Перейти в профиль
+                </Button>
+                
+                <Button
+                  onClick={handleSignOut}
+                  buttonType={ButtonType.Secondary}
+                  className="w-full"
+                >
+                  {t('logout')}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,7 +101,7 @@ export default function AuthForm({ authFormType = AuthFormType.Login }: AuthForm
           setError('Invalid email or password');
         } else {
           setSuccess('Login successful!');
-          router.push('/');
+          // router.push('/');
         }
       } else {
         // Register logic
@@ -83,7 +135,7 @@ export default function AuthForm({ authFormType = AuthFormType.Login }: AuthForm
                   : 'text-white hover:bg-white/10'
               }`}
             >
-              Sign In
+              {t('login')}
             </button>
             <button
               onClick={() => setIsLogin(false)}
@@ -93,7 +145,7 @@ export default function AuthForm({ authFormType = AuthFormType.Login }: AuthForm
                   : 'text-white hover:bg-white/10'
               }`}
             >
-              Sign Up
+              {t('register')}
             </button>
           </div>
 
@@ -157,7 +209,7 @@ export default function AuthForm({ authFormType = AuthFormType.Login }: AuthForm
                     {isLogin ? 'Signing In...' : 'Creating Account...'}
                   </div>
                 ) : (
-                  isLogin ? 'Sign In' : 'Create Account'
+                  isLogin ? t('login') : t('register')
                 )}
               </Button>
             </form>
